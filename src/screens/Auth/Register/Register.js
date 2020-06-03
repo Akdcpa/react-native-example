@@ -17,6 +17,9 @@ export default class Register extends Component {
 
     onRegister = () =>{
         register(this.state.username , this.state.email , this.state.password).then((res)=>{
+            if(res.status==="success"){
+               this.props.navigation.navigate('Login')
+            }
             Alert.alert(res)
             console.log(res)
         }).catch((err)=>console.log(err))
@@ -48,7 +51,7 @@ export default class Register extends Component {
                 </Button>
                 <View style={styles.account} >
                     <Text>Aleady have account?</Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=>this.props.navigation.navigate('Login')} >
                         <Text>Login</Text>
                     </TouchableOpacity>
                 </View>

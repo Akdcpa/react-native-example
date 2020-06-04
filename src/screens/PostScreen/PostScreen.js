@@ -48,11 +48,8 @@ export default class PostScreen extends Component {
     onClick = () =>{
 
         getPosts().then((res)=>console.log("Res : " , res))
-        console.log(getAuthToken())
         getPosts().then((res)=>{
-            console.log("Response :" , res)
             if(res.status = "success") {
-                console.log("posts", res.data[0])
                 this.setState({
                     posts: res.data
                 })

@@ -1,4 +1,6 @@
- 
+import {
+    showErrorMessage
+} from './../NotificationUtilities/NotificationUtilities'; 
 
 export const handleResponse = (response) => {
     try {
@@ -7,7 +9,7 @@ export const handleResponse = (response) => {
                 if (res.status === "success") {
                     return res;
                 } else {
-                    // RTError(res.message)
+                    showErrorMessage(res.message)
                 }
             })
             .catch((e) => {
@@ -15,8 +17,8 @@ export const handleResponse = (response) => {
             })
             .finally(() => {
             })
-    } catch (error) {
-        // RTError(error.message);
+    } catch (e) {
+        showErrorMessage(e.message)
     }
 }
  
@@ -24,7 +26,7 @@ export const handleResponse = (response) => {
 export const handleCatch = (e) => {
     try {
         console.log("catch error", e)
-        // RTError(e.message);
+        showErrorMessage(e.message)
     } catch (error) {
     }
 }

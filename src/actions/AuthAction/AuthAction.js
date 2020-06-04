@@ -9,7 +9,7 @@ import {
     handleResponse,
     handleCatch,
     
-} from '../../utilities/AuthActionUtilities/AuthActionUtilities';
+} from '../../utilities/FetchActionUtilities/FetchActionUtilities';
 // import {AsyncStorage} from 'react-native'
 
 import AsyncStorage from '@react-native-community/async-storage';
@@ -82,10 +82,9 @@ export const getAuthToken = async () => {
       const value = await AsyncStorage.getItem('Auth_Token')
       if(value !== null) {
         return value;
-        console.log("Async Value" , value)
       }
     } catch(e) {
-      console.log(e)
+
     } 
 }
 

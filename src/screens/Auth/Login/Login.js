@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { Text, View ,Alert} from 'react-native'
 import {TextInput,Button } from 'react-native-paper'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { login , setAuthToken } from '../../../actions/AuthAction/AuthAction'
+import { login , setAuthToken , getAuthToken } from '../../../actions/AuthAction/AuthAction'
+import AsyncStorage from '@react-native-community/async-storage'
 
 export default class Login extends Component {
 
@@ -19,11 +20,13 @@ export default class Login extends Component {
         login(this.state.email , this.state.password).then((res)=>{
             if(res.status === "success"){
                 this.props.navigation.navigate('DrawerRoute')
-                setAuthToken(res.access_token).then((res)=>console.log(res))
+                setAuthToken(res.data.access_token);
                 Alert.alert("Login Success")
             }
-            console.log(res)
-        }).catch((err)=>console.log(err))
+            console.log("Login response : " , res.data.access_token  )
+        }).catch((err)=>console.log(err)) 
+
+        console.log("AS7n",getAuthToken())
     }
     
     render() {

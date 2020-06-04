@@ -69,23 +69,29 @@ export const logout = async () => {
         return handleCatch(e) ;
     })
 }
-
-export const setAuthToken = (token) => {
-    AsyncStorage.setItem(ACCESS_TOKEN, token)
-}
-
-export const getAuthToken = () => {
-    return AsyncStorage.getItem(ACCESS_TOKEN)
-}
   
-
-export const onSignIn = () => AsyncStorage.setItem(ACCESS_TOKEN, "true");
-
-export const onSignOut = () => AsyncStorage.removeItem(ACCESS_TOKEN);
+export const setAuthToken = async (user_auth_token) => {
+    try {
+      await AsyncStorage.setItem('Auth_Token', user_auth_token )
+    } catch (e) {
+      // saving error
+    }
+  }
+export const getAuthToken = async () => {
+    try {
+      const value = await AsyncStorage.getItem('Auth_Token')
+      if(value !== null) {
+        return value;
+        console.log("Async Value" , value)
+      }
+    } catch(e) {
+      console.log(e)
+    } 
+}
 
 export const isSignedIn = () => {
   return new Promise((resolve, reject) => {
-    AsyncStorage.getItem(ACCESS_TOKEN)
+    AsyncStorage.getItem('Auth_Token')
       .then(res => {
         if (res !== null) {
           resolve(true);

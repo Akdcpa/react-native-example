@@ -1,9 +1,11 @@
 import { 
         Register,
-         Login
+        Login
        } from './Auth/index'
+import PostScreen from './PostScreen/PostScreen'
 
 export {
     Register,
-    Login
+    Login,
+    PostScreen
 }

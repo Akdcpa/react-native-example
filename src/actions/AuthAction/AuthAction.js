@@ -10,6 +10,9 @@ import {
     handleCatch,
     
 } from '../../utilities/AuthActionUtilities/AuthActionUtilities';
+// import {AsyncStorage} from 'react-native'
+
+import AsyncStorage from '@react-native-community/async-storage';
 
 export const register = async (name, email, password) => {
     return fetch(`${AUTH_BASE}auth/register`, {
@@ -68,10 +71,28 @@ export const logout = async () => {
 }
 
 export const setAuthToken = (token) => {
-    localStorage.setItem(ACCESS_TOKEN, token)
+    AsyncStorage.setItem(ACCESS_TOKEN, token)
 }
 
 export const getAuthToken = () => {
-    return localStorage.getItem(ACCESS_TOKEN)
+    return AsyncStorage.getItem(ACCESS_TOKEN)
 }
- 
+  
+
+export const onSignIn = () => AsyncStorage.setItem(ACCESS_TOKEN, "true");
+
+export const onSignOut = () => AsyncStorage.removeItem(ACCESS_TOKEN);
+
+export const isSignedIn = () => {
+  return new Promise((resolve, reject) => {
+    AsyncStorage.getItem(ACCESS_TOKEN)
+      .then(res => {
+        if (res !== null) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      })
+      .catch(err => reject(err));
+  });
+};

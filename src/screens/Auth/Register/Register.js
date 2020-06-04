@@ -19,8 +19,9 @@ export default class Register extends Component {
         register(this.state.username , this.state.email , this.state.password).then((res)=>{
             if(res.status==="success"){
                this.props.navigation.navigate('Login')
+               Alert.alert("Registered Success")
             }
-            Alert.alert(res)
+            // Alert.alert(res)
             console.log(res)
         }).catch((err)=>console.log(err))
     }
@@ -75,5 +76,6 @@ const styles = {
     },
     account:{
         flexDirection:'row', 
+        justifyContent:'center'
     }
 }

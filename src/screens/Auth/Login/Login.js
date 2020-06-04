@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Text, View ,Alert} from 'react-native'
 import {TextInput,Button } from 'react-native-paper'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { login } from '../../../actions/AuthAction/AuthAction'
+import { login , setAuthToken } from '../../../actions/AuthAction/AuthAction'
 
 export default class Login extends Component {
 
@@ -17,32 +17,33 @@ export default class Login extends Component {
 
     onLogin = () =>{
         login(this.state.email , this.state.password).then((res)=>{
-            if(res.status === "succss"){
-                this.props.navigation.navigate('Register')
+            if(res.status === "success"){
+                this.props.navigation.navigate('DrawerRoute')
+                setAuthToken(res.access_token).then((res)=>console.log(res))
+                Alert.alert("Login Success")
             }
-            Alert.alert(res)
             console.log(res)
         }).catch((err)=>console.log(err))
     }
     
     render() {
-        return (
+        return ( 
             <View style={styles.root} >
                 <TextInput  label="Email" 
                             value={this.state.email} 
                             onChangeText={text=>this.setState({email:text})} 
                             style={styles.textinput}
                             ></TextInput>
+
                 <TextInput  label="Password" 
                             value={this.state.password} 
                             onChangeText={text=>this.setState({password:text})}
                             style={styles.textinput}
-                             ></TextInput>
+                            ></TextInput>
+
                 <Button style={styles.button} 
                         mode="contained" 
-                        onPress={this.onLogin}>
-                  Login
-                </Button>
+                        onPress={this.onLogin}>Login</Button>
 
                 <View style={styles.account} >
                     <Text>Don't have account?</Text>
@@ -50,7 +51,7 @@ export default class Login extends Component {
                         <Text>Register</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </View> 
         )
     }
 }
@@ -66,6 +67,7 @@ const styles = {
     },
     account:{
         flexDirection:'row',
+        justifyContent: 'center',
     },
     textinput:{
         margin: 10,

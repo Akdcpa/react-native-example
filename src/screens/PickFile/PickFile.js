@@ -76,9 +76,11 @@ export default class PickFile extends Component {
       selectVideoTapped() {
         const options = {
           quality: 1.0,
+          title:'Select Video',
           maxWidth: 500,
           maxHeight: 500,
           mediaType:'video',
+          
           storageOptions: {
             skipBackup: true
           }
@@ -102,8 +104,6 @@ export default class PickFile extends Component {
               ImageSource: source,
               type:'VIDEO'
             });
-
-
           }
         });
         console.log("Choosed Data : " , this.state.ImageSource)
@@ -111,7 +111,7 @@ export default class PickFile extends Component {
 
     handleSubmit = () => {
         const data = {
-            pic: this.state.ImageSource.uri,
+            pic:this.state.ImageSource.uri,
             comment: this.state.Comment
         }
 
@@ -122,6 +122,7 @@ export default class PickFile extends Component {
     createPost = () => {
 
         let formData = new FormData();
+
         formData.append("message", this.state.comment)
 
         if (this.state.type == "IMAGE" || this.state.type == "VIDEO") {

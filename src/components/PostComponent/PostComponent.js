@@ -1,10 +1,9 @@
-import React, { Component } from 'react'
+import React , { Component} from 'react'
 import { View , Image , StyleSheet  } from 'react-native'
 
 // import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 import { IMAGE_BASE } from '../../configs/Configs'
-
-import VideoComponent from './VideoComponent'
+ 
 
 import like from '../../asserts/images/like.png'
 import dislike from '../../asserts/images/dislike.png'
@@ -22,6 +21,8 @@ import { Card,
          Body, 
          Right 
 } from 'native-base';
+  
+// import VideoPlayer from 'react-native-video-player';
  
 export default class PostComponent extends Component {
 
@@ -38,7 +39,10 @@ export default class PostComponent extends Component {
             open: false,
             comments: this.props.comments,
             comment: '',
-            sendShow: false
+            sendShow: false,
+            video: { width: undefined, height: undefined, duration: undefined },
+            thumbnailUrl: undefined,
+            videoUrl: undefined,
         }
     }
     
@@ -138,10 +142,7 @@ export default class PostComponent extends Component {
                             this.props.type === 'IMAGE' &&
                                     <Image source={{uri:`${IMAGE_BASE}${this.props.logo}`}} style={{height: 300, width: null, flex: 1}}/>
                         }
-                        {
-                            this.props.type === 'VIDEO' && 
-                            <VideoComponent link = {`${IMAGE_BASE}${this.props.logo}`} />
-                        }
+                    
                     </CardItem>
                     <CardItem>
                         <Left>
@@ -150,6 +151,12 @@ export default class PostComponent extends Component {
                             <Text> {this.state.likecount} </Text>
                             </Button>
                         </Left>
+                        <Body>
+                            <Button transparent>
+                            <Icon active name="thumbs-down" />
+                            <Text> {this.state.dislikecount} </Text>
+                            </Button>
+                        </Body>
                         <Body>
                             <Button transparent>
                             <Icon active name="chatbubbles" />

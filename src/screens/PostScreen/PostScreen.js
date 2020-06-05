@@ -6,7 +6,7 @@ import { getPosts , searchPosts} from '../../actions/PostAction/PostAction'
 import { getAuthToken} from '../../actions/AuthAction/AuthAction'
 
 import { Button } from 'react-native-paper'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+// import { TouchableOpacity } from 'react-native-gesture-handler'
  
 import AsyncStorage from '@react-native-community/async-storage';
  
@@ -14,7 +14,6 @@ import Modal from 'react-native-modal';
 
 import { FloatingAction } from "react-native-floating-action";
  
-
  const actions = [
     {
       text: "PostFile",
@@ -77,20 +76,11 @@ export default class PostScreen extends Component {
     render() {
         return (
             <View>
-                <Modal isVisible={this.state.isModalVisible}>
-                    <View style={{flex: 1}}>
-                        <Text>Hello!</Text>
-                        <Button title="Hide modal" onPress={this.toggleModal} />
-                    </View>
-                </Modal>
                 <ScrollView> 
                     {this.state.posts.length > 0 && this.state.posts.map((items, index) => { 
                             return (
                                     <View>
-                                        <PostComponent
-                                            // name={res.users.name}
-                                            // branchId={items.branch_id}
-                                            // phone={res.users.email}
+                                        <PostComponent 
                                             postId={items.id}
                                             likes={items.likes}
                                             dislikes={items.dislikes}

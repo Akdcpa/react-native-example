@@ -43,6 +43,7 @@ export default class Login extends Component {
                             showSuccessMessage(res.message)
                             this.props.navigation.navigate('Home')
                             setAuthToken(res.data.access_token);
+                            console.log("Auth Token Login :",getAuthToken())
                             Alert.alert("Login Success")
                         }
                     }

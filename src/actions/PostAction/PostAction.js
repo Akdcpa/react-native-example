@@ -10,8 +10,8 @@ import {
 } from '../../utilities/FetchActionUtilities/FetchActionUtilities';
 
 
-export const createPosts = (data) => {
-    let token = getAuthToken();
+export const createPosts = async (data) => {
+    let token = await getAuthToken();
     return fetch(`${AUTH_BASE}post/create`, {
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -28,8 +28,8 @@ export const createPosts = (data) => {
         })
 }
 
-export const getPosts = () => {
-    let token = getAuthToken();
+export const getPosts = async () => {
+    let token = await getAuthToken();
     return fetch(`${AUTH_BASE}post/get`, {
         headers: {
             'Authorization': `Bearer ${token}`
@@ -44,8 +44,8 @@ export const getPosts = () => {
         })
 }
 
-export const searchPosts = (search) => {
-    let token = getAuthToken();
+export const searchPosts = async (search) => {
+    let token = await getAuthToken();
     return fetch(`${AUTH_BASE}post/search?search=${search}`, {
         headers: {
             'Authorization': `Bearer ${token}`
@@ -60,8 +60,8 @@ export const searchPosts = (search) => {
         })
 }
 
-export const likes = (post_id) => {
-    let token = getAuthToken();
+export const likes = async (post_id) => {
+    let token = await getAuthToken();
     return fetch(`${AUTH_BASE}post/like`, {
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -100,8 +100,8 @@ export const dislikes = (post_id) => {
         })
 }
 
-export const addComment = (post_id, comment) => {
-    let token = getAuthToken();
+export const addComment =async (post_id, comment) => {
+    let token = await getAuthToken();
     return fetch(`${AUTH_BASE}comment/create`, {
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -121,8 +121,8 @@ export const addComment = (post_id, comment) => {
         })
 }
 
-export const loadComments = (post_id) => {
-    let token = getAuthToken();
+export const loadComments = async (post_id) => {
+    let token = await getAuthToken();
     return fetch(`${AUTH_BASE}comment/get?post_id=${post_id}`, {
         headers: {
             'Authorization': `Bearer ${token}`

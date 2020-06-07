@@ -6,8 +6,12 @@ import {
 } from 'native-base';
 
 import {
-  AuthRoute
+  AuthRoute,
+
 } from './src/Routes/index'
+import {
+    VideoComponent
+} from './src/components/index'
 
 class App extends React.Component {
 
@@ -17,7 +21,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <AuthRoute />
+      <AuthRoute /> 
     )
   }
 }

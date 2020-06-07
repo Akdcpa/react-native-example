@@ -1,5 +1,5 @@
 import React , { Component} from 'react'
-import { View , Image , StyleSheet  } from 'react-native'
+import { View , Image , StyleSheet ,Modal,TextInput } from 'react-native'
 
 // import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 import { IMAGE_BASE } from '../../configs/Configs'
@@ -9,7 +9,8 @@ import like from '../../asserts/images/like.png'
 import dislike from '../../asserts/images/dislike.png'
 import share from '../../asserts/images/share.png'
 import comment from '../../asserts/images/comment.png'
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity , TouchableWithoutFeedback , TouchableHighlight} from 'react-native-gesture-handler';
+import Video from 'react-native-video'
 
 import { Card, 
          CardItem, 
@@ -20,10 +21,21 @@ import { Card,
          Left, 
          Body, 
          Right 
-} from 'native-base';
-  
+} from 'native-base'; 
+import VideoLoader from './VideoLoader'
+
+import {
+      addComment,
+      likes,
+      dislikes,
+      loadComments,
+
+} from '../../actions/PostAction/PostAction'
 // import VideoPlayer from 'react-native-video-player';
- 
+ import {
+        Button as PaperButton
+ } from 'react-native-paper'
+ import Comment from './Comment'
 export default class PostComponent extends Component {
 
     constructor(props) {
@@ -31,8 +43,8 @@ export default class PostComponent extends Component {
     
         this.state = {
             count: 0,
-            likecolor: '',
-            dislikecolor: '',
+            likecolor: 'black',
+            dislikecolor: 'black',
             likecount: 0,
             dislikecount: 0,
             commentcount: this.props.comments.length,
@@ -40,9 +52,18 @@ export default class PostComponent extends Component {
             comments: this.props.comments,
             comment: '',
             sendShow: false,
-            video: { width: undefined, height: undefined, duration: undefined },
+            video: { width: undefined, height: undefined,  undefined },
             thumbnailUrl: undefined,
             videoUrl: undefined,
+            modalVisible:false,
+            paused:false,
+            repeat:true,
+            volume:1,
+            rate:2,
+            pausedText:'Play',
+            muted:false,
+            duration:0.0,
+            currentTime:0.0
         }
     }
     
@@ -87,7 +108,7 @@ export default class PostComponent extends Component {
     likes = () => {
         let likecount = (+this.state.likecount) + 1;
         this.setState({
-            likecolor: '#0067f3',
+            likecolor: 'blue',
             likecount
         })
 
@@ -97,29 +118,31 @@ export default class PostComponent extends Component {
     dislikes = () => {
         let dislikecount = (+this.state.dislikecount) + 1;
         this.setState({
-            dislikecolor: '#0067f3',
+            dislikecolor: 'blue',
             dislikecount
         })
         dislikes(this.props.postId)
     }
 
-    addComment = () => {
-        addComment(this.props.postId, this.state.comment).then((res) => {
-            this.loadComments()
-        })
+    
+
+    onClickComment = () =>{ 
+            return(
+                <Comment/>
+            )
+    }
+    onLoad = (data) =>{
+        this.setState({duration:data.duration})
     }
 
-    loadComments = () => {
-        loadComments(this.props.postId).then((res) => {
-            if(res.status == "success") {
-                this.setState({
-                    comments: res.data,
-                    comment: ""
-                })
-            }
-        })
+    onPress = () =>{
+        this.setState({currentTime:data.currentTime})
     }
-
+    
+    onEnd = () => {
+        this.setState({ pausedText:"Play" , paused:true})
+        this.video.seek(0)
+    }
 
     render() {
         return (
@@ -127,7 +150,10 @@ export default class PostComponent extends Component {
                 <Card>
                     <CardItem>
                         <Left>
-                            <Thumbnail source={{uri:`${IMAGE_BASE}${this.props.logo}`}} />
+                            {
+                                this.props.type==='IMAGE' &&
+                                <Thumbnail source={{uri:`${IMAGE_BASE}${this.props.logo}`}} />
+                            }
                             <Body>
                             <Text>{this.props.users.name}</Text>
                             <Text note>@{this.props.users.email}</Text>
@@ -137,28 +163,57 @@ export default class PostComponent extends Component {
                     <CardItem>
                         <Text> {this.props.message} </Text>
                     </CardItem>
-                    <CardItem cardBody>
+                    <CardItem cardBody style={styles.cardbody} >
                         {
                             this.props.type === 'IMAGE' &&
-                                    <Image source={{uri:`${IMAGE_BASE}${this.props.logo}`}} style={{height: 300, width: null, flex: 1}}/>
+                                    <Image source={{uri:`${IMAGE_BASE}${this.props.logo}`}} style={styles.video} />
+                        }
+                        {
+                            this.props.type === 'VIDEO' &&
+                                // <View style={{height:300}} >
+                                    <TouchableWithoutFeedback 
+                                        onPress={()=>this.setState({paused:!this.state.paused})}
+                                     >
+                                         <Video
+                                            source={{uri:`${IMAGE_BASE}${this.props.logo}`}}
+                                            ref={(ref:Video) => {this.video=ref}}
+                                            rate={1.0}
+                                            volume={1.0}
+                                            muted={false}
+                                            resizeMode={"cover"}
+                                            repeat={false}
+                                            style={styles.video}
+                                            paused={this.state.paused}
+                                            muted={this.state.muted}
+                                            onLoad={this.onLoad}
+                                            onProgress={this.onProgress}
+                                            onEnd={this.onEnd}
+                                            
+                                        />
+
+                                    </TouchableWithoutFeedback>
+                                    
+                                // </View>
+                                    
+
                         }
                     
                     </CardItem>
                     <CardItem>
                         <Left>
-                            <Button transparent>
-                            <Icon active name="thumbs-up" />
-                            <Text> {this.state.likecount} </Text>
-                            </Button>
+                             <Button transparent onPress={this.likes} > 
+                                <Icon active style={{color:this.state.likecolor}} name="thumbs-up" />
+                                <Text> {this.state.likecount} </Text>   
+                             </Button> 
                         </Left>
                         <Body>
-                            <Button transparent>
-                            <Icon active name="thumbs-down" />
+                            <Button transparent  onPress={this.dislikes}  >
+                            <Icon active style={{color:this.state.dislikecolor}} name="thumbs-down" />
                             <Text> {this.state.dislikecount} </Text>
                             </Button>
                         </Body>
                         <Body>
-                            <Button transparent>
+                            <Button transparent onPress={this.onClickComment  } >
                             <Icon active name="chatbubbles" />
                             <Text> {this.state.commentcount} </Text>
                             </Button>
@@ -166,7 +221,7 @@ export default class PostComponent extends Component {
                         <Right>
                             <Text>11h ago</Text>
                         </Right>
-                    </CardItem>
+                    </CardItem> 
                 </Card> 
             </View>
         )
@@ -180,6 +235,7 @@ const styles = StyleSheet.create({
       left: 0,
       bottom: 0,
       right: 0,
+      height:300
     },
     icons:{
         width:30,
@@ -192,5 +248,19 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center'
-      }
+      },
+      video: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+        height:300
+      },
+      cardbody:{
+        height: 300,
+         width: null, 
+         flex: 1
+      },
+
   });

@@ -8,125 +8,145 @@ import Video from 'react-native-video';
 import MediaControls, { PLAYER_STATES } from 'react-native-media-controls';
 //Media Controls to control Play/Pause/Seek and full screen
 
+import {
+    TouchableWithoutFeedback
+} from 'react-native-gesture-handler'
+
 class VideoComponent extends Component {
   videoPlayer;
 
   constructor(props) {
     super(props);
     this.state = {
-      currentTime: 0,
-      duration: 0,
-      isFullScreen: false,
-      isLoading: true,
-      paused: false,
-      playerState: PLAYER_STATES.PLAYING,
-      screenType: 'content',
+      // currentTime: 0,
+      // duration: 0,
+      // isFullScreen: false,
+      // isLoading: true,
+      // paused: false,
+      // playerState: PLAYER_STATES.PLAYING,
+      // screenType: 'content',
+      paused:false,
+      repeat:true,
+      volume:1,
+      rate:2,
+      pausedText:'Play',
+      muted:false,
+      duration:0.0,
+      currentTime:0.0
     };
   }
 
-  onSeek = seek => {
-    //Handler for change in seekbar
-    this.videoPlayer.seek(seek);
-  };
+  onLoad = (data) =>{
+    this.setState({duration:data.duration})
+}
 
-  onPaused = playerState => {
-    //Handler for Video Pause
-    this.setState({
-      paused: !this.state.paused,
-      playerState,
-    });
-  };
+onPress = () =>{
+    this.setState({currentTime:data.currentTime})
+}
 
-  onReplay = () => {
-    //Handler for Replay
-    this.setState({ playerState: PLAYER_STATES.PLAYING });
-    this.videoPlayer.seek(0);
-  };
-
-  onProgress = data => {
-    const { isLoading, playerState } = this.state;
-    // Video Player will continue progress even if the video already ended
-    if (!isLoading && playerState !== PLAYER_STATES.ENDED) {
-      this.setState({ currentTime: data.currentTime });
-    }
-  };
-  
-  onLoad = data => this.setState({ duration: data.duration, isLoading: false });
-  
-  onLoadStart = data => this.setState({ isLoading: true });
-  
-  onEnd = () => this.setState({ playerState: PLAYER_STATES.ENDED });
-  
-  onError = () => alert('Oh! ', error);
-  
-  exitFullScreen = () => {
-    alert('Exit full screen');
-  };
-  
-  enterFullScreen = () => {};
-  
-  onFullScreen = () => {
-    if (this.state.screenType == 'content')
-      this.setState({ screenType: 'cover' });
-    else this.setState({ screenType: 'content' });
-  };
-  renderToolbar = () => (
-    <View>
-      <Text> toolbar </Text>
-    </View>
-  );
-  onSeeking = currentTime => this.setState({ currentTime });
+onEnd = () => {
+    this.setState({ pausedText:"Play" , paused:true})
+    this.video.seek(0)
+}
 
   render() {
     return (
-      <View style={styles.container}>
-        <Video
-          onEnd={this.onEnd}
-          onLoad={this.onLoad}
-          onLoadStart={this.onLoadStart}
-          onProgress={this.onProgress}
-          paused={this.state.paused}
-          ref={videoPlayer => (this.videoPlayer = videoPlayer)}
-          resizeMode={this.state.screenType}
-          onFullScreen={this.state.isFullScreen}
-          source={{ uri: this.props.link }}
-          style={styles.mediaPlayer}
-          volume={10}
-        />
-        <MediaControls
-          duration={this.state.duration}
-          isLoading={this.state.isLoading}
-          mainColor="#333"
-          onFullScreen={this.onFullScreen}
-          onPaused={this.onPaused}
-          onReplay={this.onReplay}
-          onSeek={this.onSeek}
-          onSeeking={this.onSeeking}
-          playerState={this.state.playerState}
-          progress={this.state.currentTime}
-          toolbar={this.renderToolbar()}
-        />
-      </View>
+      <View style={{height:300}} >
+      <TouchableWithoutFeedback 
+          onPress={()=>this.setState({paused:!this.state.paused})}
+       >
+           <Video
+              source={require('../../asserts/Videos/sample.mp4')}
+              ref={(ref:Video) => {this.video=ref}}
+              rate={1.0}
+              volume={1.0}
+              muted={false}
+              resizeMode={"contain"}
+              repeat={this.state.repeat}
+              style={styles.video}
+              paused={this.state.paused}
+              muted={this.state.muted}
+              onLoad={this.onLoad}
+              onProgress={this.onProgress}
+              onEnd={this.onEnd}
+              
+          />
+
+      </TouchableWithoutFeedback>
+      
+  </View>
     );
   }
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  toolbar: {
-    marginTop: 30,
-    backgroundColor: 'white',
-    padding: 10,
-    borderRadius: 5,
-  },
-  mediaPlayer: {
+  backgroundVideo: {
     position: 'absolute',
     top: 0,
     left: 0,
     bottom: 0,
     right: 0,
-    backgroundColor: 'black',
+    height:300
   },
+  icons:{
+      width:30,
+      height:30, 
+  },
+  cardaction:{
+      display:'flex',
+      justifyContent:'space-between'
+  },
+  container: {
+      flex: 1,
+      justifyContent: 'center'
+    },
+    video: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 0,
+      height:300
+    },
+    cardbody:{
+      height: 300,
+       width: null, 
+       flex: 1
+    },
+    centeredView: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 22
+    },
+    modalView: {
+      margin: 20,
+      backgroundColor: "white",
+      borderRadius: 20,
+      padding: 35,
+      alignItems: "center",
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5, 
+    },
+    openButton: {
+      backgroundColor: "#F194FF",
+      borderRadius: 20,
+      padding: 10,
+      elevation: 2
+    },
+    textStyle: {
+      color: "white",
+      fontWeight: "bold",
+      textAlign: "center"
+    },
+    modalText: {
+      marginBottom: 15,
+      textAlign: "center"
+    }
 });
 export default VideoComponent;

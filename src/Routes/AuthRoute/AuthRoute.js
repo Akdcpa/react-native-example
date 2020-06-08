@@ -13,6 +13,11 @@ import {
   Home,
   Splash
 } from '../../screens/index'
+import { 
+  Button, 
+  Icon,
+
+} from 'native-base'; 
 const Stack = createStackNavigator();
 
 class AuthRoute extends React.Component {
@@ -46,9 +51,11 @@ class AuthRoute extends React.Component {
           <Stack.Screen
             name="Home"
             component={Home}
-            options={{
-              headerLeft: null,
-              headerTitleAlign: 'center'
+            options={{ 
+              headerTitleAlign: 'center',
+              headerLeft:()=><Button transparent >
+                                <Icon style={{fontSize:35}} active name="md-menu" /> 
+                              </Button>
             }}
           />
         </Stack.Navigator>

@@ -11,6 +11,11 @@ import  { Button , TextInput } from 'react-native-paper'
 import ImagePicker from 'react-native-image-picker';
  
 import { createPosts } from '../../actions/PostAction/PostAction'
+import {
+  Button as BaseButton,
+  Icon
+} from 'native-base'
+
 export default class PickFile extends Component {
     constructor(props) {
         super(props)
@@ -38,6 +43,11 @@ export default class PickFile extends Component {
       this.setState({isModalVisible: !this.state.isModalVisible});
     };
 
+    componentDidMount(){
+      // console.log("Name : " , this.props.type)
+      console.log("Name : " , this.props.route.params.type)
+
+    }
 
     selectPhotoTapped() {
         const options = {
@@ -165,30 +175,42 @@ export default class PickFile extends Component {
     render() {
         return (
             <View stlyle={styles.root} > 
-                 <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
- 
-                    <View style={styles.ImageContainer}>
-        
-                    { this.state.ImageSource === null ? <Text>Select a Photo</Text> :
-                    <Image style={styles.ImageContainer} source={this.state.ImageSource}/>
-                    }
-        
-                    </View>
-        
-                </TouchableOpacity>
+                <View style={styles.head}  >
+                  <Button transparent onPress={()=>this.props.navigation.goBack()} >
+                      <Icon  style={{fontSize:30}} active name="ios-arrow-back" /> 
+                  </Button>
+                  <Text style={styles.post} >Back</Text>
+                </View>
+                <View style={styles.picker} >
 
-                <TouchableOpacity onPress={this.selectVideoTapped.bind(this)}>
- 
-                    <View style={styles.ImageContainer}>
-        
-                    { this.state.ImageSource === null ? <Text>Select a Video</Text> :
-                    <Image style={styles.ImageContainer} source={this.state.ImageSource} />
+                      { 
+                        this.props.route.params.type === "post_comment" &&
+                        <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
+                            <View style={styles.ImageContainer}>
+                              { this.state.ImageSource === null ? <Text>Select a Photo</Text> :
+                              <Image style={styles.ImageContainer} source={this.state.ImageSource}/>
+                              }
+                            </View>  
+                        </TouchableOpacity>
+
+                      }
+                    { 
+                      this.props.route.params.type === "post_file" &&
+
+                      <TouchableOpacity onPress={this.selectVideoTapped.bind(this)}>
+      
+                          <View style={styles.ImageContainer}>
+                          { this.state.ImageSource === null ?  
+                            <Text>Select a Video</Text> 
+                         :
+                          <Image style={styles.ImageContainer} source={this.state.ImageSource} />
+                          }
+                          </View>
+                      </TouchableOpacity> 
+
                     }
-        
-                    </View>
-        
-                </TouchableOpacity>
-                    
+                  </View>
+                  
                 <TextInput label="Caption"
                     value={this.state.comment}
                     onChangeText={text => this.setState({ comment: text })}
@@ -211,7 +233,22 @@ const styles = StyleSheet.create({
     container: {
         flex: 1
       },
-    textinput:{
-        width:'100%'
+    textinput:{ 
+        margin:8
+    },
+    button:{
+      margin:8
+    },
+    head:{
+      flexDirection:'row',
+      alignItems:'center'
+    },
+    post:{
+      fontSize:22,
+      fontWeight:'bold'
+    },
+    picker:{
+      justifyContent:'center',
+      alignSelf:'center'
     }
 })

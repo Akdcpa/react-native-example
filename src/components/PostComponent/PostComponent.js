@@ -40,7 +40,7 @@ import {
         Button as PaperButton
  } from 'react-native-paper'
  
- import Modal from 'react-native-modal'
+import Modal from 'react-native-modal'
 export default class PostComponent extends Component {
 
     constructor(props) {
@@ -143,6 +143,7 @@ export default class PostComponent extends Component {
     }
 
     addComment = () => {
+        console.log("Comment :" , this.state.comment)
         addComment(this.props.postId, this.state.comment).then((res) => {
             this.loadComments()
         })
@@ -171,6 +172,7 @@ export default class PostComponent extends Component {
         this.setState({ pausedText:"Play" , paused:true})
         this.video.seek(0)
     }
+
 
     render() {
         return (
@@ -230,19 +232,19 @@ export default class PostComponent extends Component {
                     <CardItem>
                         <Left>
                              <Button transparent onPress={this.likes} > 
-                                <Icon active style={{color:this.state.likecolor}} name="thumbs-up" />
+                                <Icon active style={{color:this.state.likecolor , fontSize:25}} name="thumbs-up" />
                                 <Text> {this.state.likecount} </Text>   
                              </Button> 
                         </Left>
                         <Body>
                             <Button transparent  onPress={this.dislikes}  >
-                            <Icon active style={{color:this.state.dislikecolor}} name="thumbs-down" />
+                            <Icon  active style={{color:this.state.dislikecolor,fontSize:25}} name="thumbs-down" />
                             <Text> {this.state.dislikecount} </Text>
                             </Button>
                         </Body>
                         <Body>
                             <Button transparent onPress={this.toggleModal  } >
-                            <Icon active name="chatbubbles" />
+                            <Icon  style={{fontSize:25}}  active name="chatbubbles" />
                             <Text> {this.state.commentcount} </Text>
                             </Button>
                         </Body>
@@ -251,7 +253,7 @@ export default class PostComponent extends Component {
                         </Right>
                     </CardItem> 
                 </Card> 
-                    {/* <Button title="Show modal" onPress={this.toggleModal} /> */}
+           
                 <View style={{flex:1}} >
                     <Modal style={styles.modal} isVisible={this.state.isModalVisible}> 
 
@@ -279,9 +281,13 @@ export default class PostComponent extends Component {
                                 <Button transparent onPress={this.toggleModal  } >
                                         <Icon style={{fontSize:20}} active name="camera" /> 
                                 </Button>
-                                <TextInput placeholder="Comment" style={{width:'100%'}}></TextInput>
-                                <Button transparent onPress={this.toggleModal  } >
-                                        <Icon style={{fontSize:20}} active name="send" /> 
+                                <TextInput  value={this.state.comment}
+                                            onChangeText={text => this.setState({ comment: text })}
+                                            placeholder="Comment" 
+                                            style={{width:'70%'}}>
+                                </TextInput>
+                                <Button transparent onPress={this.addComment  } >
+                                        <Icon  style={{fontSize:20}} active name="send" /> 
                                 </Button>
                             </View>
                             </ScrollView> 
@@ -336,13 +342,13 @@ const styles = StyleSheet.create({
     },
     title:{
         fontWeight:"bold",
-        fontSize:15,
+        fontSize:17,
         fontFamily:'sans-serif',
-        marginLeft:3
+        marginLeft:10
     },
     scroll:{
         flex: 1, 
-        marginLeft:5,
+        marginLeft:3,
     },
     commentpost:{
         flexDirection:'row',

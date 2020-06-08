@@ -1,18 +1,36 @@
 import React, { Component } from 'react'
-import { Text, View , ScrollView } from 'react-native'
+import { Text, View , ScrollView , StyleSheet , Image} from 'react-native'
 import { SpanButton , Drawer , PostComponent ,FabAction} from '../../components/index'
 
 import { getPosts , searchPosts} from '../../actions/PostAction/PostAction'
 import { getAuthToken} from '../../actions/AuthAction/AuthAction'
 
 import { Button } from 'react-native-paper'
+
+import {
+    Button as BaseButton,
+    Icon
+} from 'native-base'
 // import { TouchableOpacity } from 'react-native-gesture-handler'
  
 import AsyncStorage from '@react-native-community/async-storage';
  
 import Modal from 'react-native-modal';
 
+import PickFile from '../PickFile/PickFile'
+
 import { FloatingAction } from "react-native-floating-action";
+import {
+    TouchableOpacity
+} from 'react-native-gesture-handler'
+import ImagePicker from 'react-native-image-picker';
+ 
+import { createPosts } from '../../actions/PostAction/PostAction'
+
+import {
+    useNavigation
+} from '@react-navigation/native'
+ 
  
  const actions = [
     {
@@ -31,32 +49,33 @@ import { FloatingAction } from "react-native-floating-action";
       color:'#3aa600'
     },
    
-  ];
+  ]; 
+
+
+
 export default class PostScreen extends Component {
     constructor(props) {
         super(props)
     
         this.state = {
             posts:[],
-            isModalVisible:false
+            isModalVisible:false,
+            ImageSource: null,
+
         }
         this.initialLoad=this.initialLoad.bind(this)
+
     }
 
-    componentDidMount = async () => {
-        console.log("Token" ,await AsyncStorage.getItem('Auth_Token'))
-
+    componentDidMount = async () => { 
         setTimeout(() => {
             this.initialLoad()
         }, 1000);  
-
-        getPosts().then((res)=>console.log("Res : " , res))
     };
     
     initialLoad = () => {
         // this.showLoader()
-        getPosts().then((res)=>{
-            console.log("Response :" , res)
+        getPosts().then((res)=>{ 
             if(res.status = "success") {
                 console.log("posts", res.data[0])
                 this.setState({
@@ -73,7 +92,60 @@ export default class PostScreen extends Component {
         this.setState({isModalVisible: !this.state.isModalVisible});
       };
 
+      selectPhotoTapped() {
+        const options = {
+          quality: 1.0,
+          maxWidth: 500,
+          maxHeight: 500, 
+          storageOptions: {
+            skipBackup: true
+          }
+        };
+
+        ImagePicker.showImagePicker(options, (response) => {
+          console.log('Response = ', response);
+
+          if (response.didCancel) {
+            console.log('User cancelled photo picker');
+          }
+          else if (response.error) {
+            console.log('ImagePicker Error: ', response.error);
+          }
+          else if (response.customButton) {
+            console.log('User tapped custom button: ', response.customButton);
+          }
+          else {
+            let source = { uri: response.uri };
+            this.setState({
+
+              ImageSource: source,
+              type:'IMAGE'
+            });
+          }
+        });
+        console.log("Choosed Data : " , this.state.ImageSource)
+      }
+
     render() {
+
+        const FabComponent = props=>{
+            const navigation = useNavigation();
+
+            return(
+                <FloatingAction
+                    actions={actions}
+                    onPressItem={name => {
+                        // if(name==="post_file"){
+                            // this.setState({isModalVisible:true})
+                            navigation.navigate('PickFile' , {type:name})
+                            console.log(`selected button: ${name}`);   
+                        // }
+                    }} 
+                /> 
+            )
+
+        }
+
         return (
             <View>
                 <ScrollView> 
@@ -97,16 +169,25 @@ export default class PostScreen extends Component {
                             } 
 
                 </ScrollView> 
-                    <FloatingAction
-                    actions={actions}
-                    onPressItem={name => {
-                        if(name==="post_file"){
-                            this.toggleModal
-                        }
-                        console.log(`selected button: ${name}`);
-                    }} 
-                    />
+
+                <FabComponent/>
             </View>
         )
     }
 }
+
+const styles = StyleSheet.create({ 
+      modal:{
+          backgroundColor:'white'
+    }, 
+    root:{
+        flexGrow:1,
+        justifyContent:'center'
+    },
+    container: {
+        flex: 1
+      },
+    textinput:{
+        width:'100%'
+    }
+  });

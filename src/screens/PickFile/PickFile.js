@@ -175,12 +175,12 @@ export default class PickFile extends Component {
     render() {
         return (
             <View stlyle={styles.root} > 
-                <View style={styles.head}  >
-                  <Button transparent onPress={()=>this.props.navigation.goBack()} >
+                  <TouchableOpacity  onPress={()=>this.props.navigation.goBack()} >
+                    <View style={styles.head}  >
                       <Icon  style={{fontSize:30}} active name="ios-arrow-back" /> 
-                  </Button>
-                  <Text style={styles.post} >Back</Text>
-                </View>
+                      <Text style={styles.post} >Back</Text>
+                    </View>
+                  </TouchableOpacity>
                 <View style={styles.picker} >
 
                       { 
@@ -241,11 +241,15 @@ const styles = StyleSheet.create({
     },
     head:{
       flexDirection:'row',
-      alignItems:'center'
+      alignItems:'center',
+      margin:3,
+      marginLeft: 10,
     },
     post:{
       fontSize:22,
-      fontWeight:'bold'
+      fontWeight:'bold',
+      margin:5,
+      marginLeft:10
     },
     picker:{
       justifyContent:'center',

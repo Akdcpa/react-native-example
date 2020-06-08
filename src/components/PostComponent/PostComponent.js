@@ -1,16 +1,20 @@
 import React , { Component} from 'react'
-import { View , Image , StyleSheet ,Modal,TextInput } from 'react-native'
+import { View , Image , StyleSheet ,TextInput } from 'react-native'
 
 // import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 import { IMAGE_BASE } from '../../configs/Configs'
  
-
+import Close from '../../asserts/images/close.png'
 import like from '../../asserts/images/like.png'
 import dislike from '../../asserts/images/dislike.png'
 import share from '../../asserts/images/share.png'
 import comment from '../../asserts/images/comment.png'
-import { TouchableOpacity , TouchableWithoutFeedback , TouchableHighlight} from 'react-native-gesture-handler';
+import { TouchableOpacity , TouchableWithoutFeedback , TouchableHighlight, ScrollView} from 'react-native-gesture-handler';
 import Video from 'react-native-video'
+
+import {
+    Avatar
+} from 'react-native-elements'
 
 import { Card, 
          CardItem, 
@@ -35,7 +39,8 @@ import {
  import {
         Button as PaperButton
  } from 'react-native-paper'
- import Comment from './Comment'
+ 
+ import Modal from 'react-native-modal'
 export default class PostComponent extends Component {
 
     constructor(props) {
@@ -56,15 +61,18 @@ export default class PostComponent extends Component {
             thumbnailUrl: undefined,
             videoUrl: undefined,
             modalVisible:false,
-            paused:false,
+            paused:true,
             repeat:true,
             volume:1,
             rate:2,
             pausedText:'Play',
             muted:false,
             duration:0.0,
-            currentTime:0.0
+            currentTime:0.0,
+            isModalVisible:false
         }
+
+        this.loadComments = this.loadComments.bind(this);
     }
     
 
@@ -124,13 +132,33 @@ export default class PostComponent extends Component {
         dislikes(this.props.postId)
     }
 
-    
+    toggleModal = () => {
+        this.setState({isModalVisible: !this.state.isModalVisible});
+        // this.loadComments()
+        console.log("State :" , this.props.comments)
+      };
 
-    onClickComment = () =>{ 
-            return(
-                <Comment/>
-            )
+    componentDidMount(){
+        // this.loadComments()
     }
+
+    addComment = () => {
+        addComment(this.props.postId, this.state.comment).then((res) => {
+            this.loadComments()
+        })
+    }
+
+    loadComments = () => {
+        loadComments(this.props.postId).then((res) => {
+            if(res.status == "success") {
+                this.setState({
+                    comments: res.data,
+                    comment: ""
+                })
+            }
+        })
+    }
+ 
     onLoad = (data) =>{
         this.setState({duration:data.duration})
     }
@@ -213,7 +241,7 @@ export default class PostComponent extends Component {
                             </Button>
                         </Body>
                         <Body>
-                            <Button transparent onPress={this.onClickComment  } >
+                            <Button transparent onPress={this.toggleModal  } >
                             <Icon active name="chatbubbles" />
                             <Text> {this.state.commentcount} </Text>
                             </Button>
@@ -223,6 +251,42 @@ export default class PostComponent extends Component {
                         </Right>
                     </CardItem> 
                 </Card> 
+                    {/* <Button title="Show modal" onPress={this.toggleModal} /> */}
+                <View style={{flex:1}} >
+                    <Modal style={styles.modal} isVisible={this.state.isModalVisible}> 
+
+                            <View style={styles.modalhead} > 
+                                <Text style={styles.title} >Comments</Text>
+                                <Button transparent onPress={this.toggleModal  } >
+                                    <Icon style={{fontSize:30}} active name="close" /> 
+                                </Button>
+                            </View> 
+                            <ScrollView style={styles.scroll}>  
+                                {this.state.comments.map((val, ind) => ( 
+                                    <View style={styles.commentuser} > 
+                                        <Avatar
+                                            size="small"
+                                            rounded
+                                            title={val.user.name}
+                                            onPress={() => console.log("Works!")}
+                                            activeOpacity={0.7}
+                                            />
+                                        <Text>{val.comment}</Text> 
+                                    </View>
+                                    ))
+                                }  
+                            <View style={styles.commentpost} >
+                                <Button transparent onPress={this.toggleModal  } >
+                                        <Icon style={{fontSize:20}} active name="camera" /> 
+                                </Button>
+                                <TextInput placeholder="Comment" style={{width:'100%'}}></TextInput>
+                                <Button transparent onPress={this.toggleModal  } >
+                                        <Icon style={{fontSize:20}} active name="send" /> 
+                                </Button>
+                            </View>
+                            </ScrollView> 
+                    </Modal>
+                </View>
             </View>
         )
     }
@@ -262,5 +326,31 @@ const styles = StyleSheet.create({
          width: null, 
          flex: 1
       },
+      modalhead:{
+          justifyContent:'space-between',
+          flexDirection:'row',
+          alignItems:'center'
+      },
+      modal:{
+          backgroundColor:'white'
+    },
+    title:{
+        fontWeight:"bold",
+        fontSize:15,
+        fontFamily:'sans-serif',
+        marginLeft:3
+    },
+    scroll:{
+        flex: 1, 
+        marginLeft:5,
+    },
+    commentpost:{
+        flexDirection:'row',
+        justifyContent:"space-between",
+        marginTop:10
+    },
+    commentuser:{
+        marginLeft:5
+    }
 
   });

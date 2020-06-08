@@ -191,6 +191,9 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    compile 'com.facebook.fresco:animated-gif:1.+'
+    compile 'com.facebook.fresco:animated-webp:1.+'
+    compile 'com.facebook.fresco:webpsupport:1.+' 
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 

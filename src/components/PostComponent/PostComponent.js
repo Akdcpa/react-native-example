@@ -198,7 +198,7 @@ export default class PostComponent extends Component {
                             this.props.type === 'IMAGE' &&
                                     <Image source={{uri:`${IMAGE_BASE}${this.props.logo}`}} style={styles.video} />
                         }
-                        {
+                        {/* {
                             this.props.type === 'VIDEO' &&
                                 // <View style={{height:300}} >
                                     <TouchableWithoutFeedback 
@@ -226,7 +226,7 @@ export default class PostComponent extends Component {
                                 // </View>
                                     
 
-                        }
+                        } */}
                     
                     </CardItem>
                     <CardItem>

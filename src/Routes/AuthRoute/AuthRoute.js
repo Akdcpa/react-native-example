@@ -2,23 +2,43 @@
 
 import React from 'react';
 import {
-  StyleSheet,
+  StyleSheet,View
 } from 'react-native';
 
-import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
+import { NavigationContainer ,
+          useNavigation
+} from '@react-navigation/native'
+import { createStackNavigator} from '@react-navigation/stack'
 import {
   Register,
   Login,
   Home,
-  Splash
+  Splash,
+  MenuItem
 } from '../../screens/index'
+
 import { 
   Button, 
   Icon,
-
 } from 'native-base'; 
 const Stack = createStackNavigator();
+
+import {
+  func
+} from '../../screens/PostScreen/PostScreen'
+
+export class Menu extends React.Component {
+  toggleDrawer = () => {
+    this.props.navigation.toggleDrawer();
+  };
+  render(){
+    return(
+      <Button transparent onPress={this.toggleDrawer.bind(this)}  >
+        <Icon style={{fontSize:35}} active name="md-menu" /> 
+      </Button>
+    )
+  }
+}
 
 class AuthRoute extends React.Component {
   render() {
@@ -53,9 +73,7 @@ class AuthRoute extends React.Component {
             component={Home}
             options={{ 
               headerTitleAlign: 'center',
-              headerLeft:()=><Button transparent >
-                                <Icon style={{fontSize:35}} active name="md-menu" /> 
-                              </Button>
+              headerLeft:()=> <Menu/>
             }}
           />
         </Stack.Navigator>
@@ -64,4 +82,13 @@ class AuthRoute extends React.Component {
   }
 }
 
+// export const MenuBar = props =>{ 
+//   return(
+//     <View>
+//       <Button transparent onPress={()=>t}  >
+//           <Icon style={{fontSize:35}} active name="md-menu" /> 
+//       </Button>
+//     </View>
+//   )
+// }
 export default AuthRoute;

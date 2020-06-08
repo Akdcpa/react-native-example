@@ -51,6 +51,7 @@ import {
    
   ]; 
 
+export const func = null;
 
 
 export default class PostScreen extends Component {
@@ -64,11 +65,11 @@ export default class PostScreen extends Component {
 
         }
         this.initialLoad=this.initialLoad.bind(this)
-
+        func:this.props.navigation.openDrawer();
     }
 
     componentDidMount = async () => { 
-        setTimeout(() => {
+        setTimeout(() => {1
             this.initialLoad()
         }, 1000);  
     };
@@ -126,20 +127,19 @@ export default class PostScreen extends Component {
         console.log("Choosed Data : " , this.state.ImageSource)
       }
 
+      toggleDrawer = () =>{
+      }
+
     render() {
 
         const FabComponent = props=>{
             const navigation = useNavigation();
-
             return(
                 <FloatingAction
                     actions={actions}
-                    onPressItem={name => {
-                        // if(name==="post_file"){
-                            // this.setState({isModalVisible:true})
+                    onPressItem={name => { 
                             navigation.navigate('PickFile' , {type:name})
-                            console.log(`selected button: ${name}`);   
-                        // }
+                            console.log(`selected button: ${name}`); 
                     }} 
                 /> 
             )

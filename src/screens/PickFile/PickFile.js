@@ -15,6 +15,7 @@ import {
   Button as BaseButton,
   Icon
 } from 'native-base'
+import { showSuccessMessage } from '../../utilities/NotificationUtilities/NotificationUtilities';
 
 export default class PickFile extends Component {
     constructor(props) {
@@ -114,7 +115,7 @@ export default class PickFile extends Component {
 
     handleSubmit = () => {
         const data = {
-            pic:this.state.ImageSource.uri,
+            // pic:this.state.ImageSource.uri,
             comment: this.state.Comment
         }
 
@@ -127,20 +128,21 @@ export default class PickFile extends Component {
         let formData = new FormData();
 
         formData.append("message", this.state.comment)
+        this.sendPost(formData)
 
-        if (this.state.type == "IMAGE" || this.state.type == "VIDEO") {
-            let picture = this.state.ImageSource.uri;
-            let reader = new FileReader();
-            reader.onload = (e) => {
-                formData.append("image", picture);
-                formData.append("type", this.state.type)
-                this.sendPost(formData)
-            };
-            reader.readAsDataURL(picture);
-            console.log("URL Specified : " , reader.readAsDataURL(picture))
-        } else {
-            this.sendPost(formData)
-        }
+        // if (this.state.type == "IMAGE" || this.state.type == "VIDEO") {
+        //     let picture = this.state.ImageSource.uri;
+        //     let reader = new FileReader();
+        //     reader.onload = (e) => {
+        //         formData.append("image", picture);
+        //         formData.append("type", this.state.type)
+        //         this.sendPost(formData)
+        //     };
+        //     reader.readAsDataURL(picture);
+        //     console.log("URL Specified : " , reader.readAsDataURL(picture))
+        // } else {
+        //     this.sendPost(formData)
+        // }
     }
 
     sendPost = (formData) => {
@@ -151,6 +153,8 @@ export default class PickFile extends Component {
             if (res.status == "success") {
                 // RTSuccess(res.message)
                 // this.props.onLoad()
+                showSuccessMessage("Post successfully Updated")
+                this.props.navigation.goBack()
 
                 console.log("SuccessFully Updated")
             }
@@ -179,11 +183,11 @@ export default class PickFile extends Component {
                       { 
                         this.props.route.params.type === "post_comment" &&
                         <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
-                            <View style={styles.ImageContainer}>
+                            {/* <View style={styles.ImageContainer}>
                               { this.state.ImageSource === null ? <Text>Select a Photo</Text> :
                               <Image style={styles.ImageContainer} source={this.state.ImageSource}/>
                               }
-                            </View>  
+                            </View>   */}
                         </TouchableOpacity>
 
                       }

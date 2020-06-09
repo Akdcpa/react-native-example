@@ -24,10 +24,20 @@ import {
 const Stack = createStackNavigator(); 
 
 class AuthRoute extends React.Component {
+  constructor(props) {
+    super(props)
+  
+    this.state = {
+       
+    };
+  };
+  
   render() {
     return (
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Splash" >
+        <Stack.Navigator 
+          initialRouteName="Splash" 
+        >
         <Stack.Screen
             name="Splash"
             component={Splash}
@@ -54,10 +64,12 @@ class AuthRoute extends React.Component {
           <Stack.Screen
             name="Home"
             component={Home}
-            options={{ 
+            options={({navigation}) => ({ 
               headerTitleAlign: 'center',
-              headerLeft:()=> <Menu/>
-            }}
+              headerLeft: () => (
+                <Menu onPress={() => navigation.toggleDrawer()}/>
+              ),
+            })}
           />
         </Stack.Navigator>
       </NavigationContainer>

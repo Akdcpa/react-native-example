@@ -195,10 +195,10 @@ export default class PostComponent extends Component {
                         <Text> {this.props.message} </Text>
                     </CardItem>
                     <CardItem cardBody style={styles.cardbody} >
-                        {/* {
+                        {
                             this.props.type === 'IMAGE' &&
                                     <Image source={{uri:`${IMAGE_BASE}${this.props.logo}`}} style={styles.video} />
-                        } */}
+                        }
                         {/* {
                             this.props.type === 'VIDEO' &&
                                 // <View style={{height:300}} >

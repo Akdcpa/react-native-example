@@ -3,7 +3,8 @@ import {
         View , 
         ScrollView , 
         StyleSheet , 
-        Image
+        Image,
+        RefreshControl
   } from 'react-native'
 import {  
         PostComponent , 
@@ -42,6 +43,7 @@ import {
   ];  
   
 export default class PostScreen extends Component {
+
     constructor(props) {
         super(props)
     
@@ -49,16 +51,21 @@ export default class PostScreen extends Component {
             posts:[],
             isModalVisible:false,
             ImageSource: null,
-            isLoading: false
+            isLoading: false,
+            isRefreshing: false
         }
         this.initialLoad=this.initialLoad.bind(this)
         func:this.props.navigation.openDrawer();
+        this.onRefresh = this.onRefresh.bind(this)
     }
 
     componentDidMount = async () => { 
-        setTimeout(() => {1
-            this.initialLoad()
-        }, 1000);  
+        // setTimeout(() => {1
+            // this.initialLoad()
+            this.props.navigation.addListener('focus', () => {
+                this.initialLoad()
+              })
+        // }, 1000);  
     };
     
     initialLoad = () => {
@@ -92,6 +99,13 @@ export default class PostScreen extends Component {
         this.setState({isModalVisible: !this.state.isModalVisible});
       };
 
+    onRefresh = () => {
+        this.setState({
+            isRefreshing: false
+        })
+        this.initialLoad()
+    }
+
     render() {
 
         const FabComponent = props=>{
@@ -109,7 +123,11 @@ export default class PostScreen extends Component {
 
         return (
             <View>
-                <ScrollView> 
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl refreshing={this.state.isRefreshing} onRefresh={this.onRefresh} />
+                      }
+                > 
                     {   this.state.isLoading &&
                         <Loader visible={this.state.isLoading} />
                     }

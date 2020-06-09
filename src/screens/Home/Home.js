@@ -1,9 +1,9 @@
 import React from 'react';
 import {
-    StyleSheet,View,Alert
+    StyleSheet, View, Alert
 } from 'react-native'
 
-import {    
+import {
     createDrawerNavigator,
     DrawerItem,
     DrawerContentScrollView,
@@ -37,69 +37,74 @@ import {
 class Logout extends React.Component {
     constructor(props) {
         super(props)
-    
+
         this.state = {
-            isLoading:false
-             
+            isLoading: false
+
         }
     }
     showLoader = () => {
         this.setState({
             isLoading: true
         })
-      }
-  
-      hideLoader = () => {
-          this.setState({
-              isLoading: false
-          })
-      }
-    
-    render(){ 
-        return(
-                <DrawerContentScrollView {...this.props}>
-                    <DrawerItemList   {...this.props} />
-                        <View style={{flexDirection: 'row',alignItems: 'center',marginLeft:20 }} >
-                            <Icon style={styles.icon} name="log-out" />
-                            <DrawerItem label="Logout" onPress={()=>
-                                    Alert.alert(
-                                    'Log out',
-                                    'Do you want to logout?',
-                                    [
-                                    {text: 'Cancel', onPress: () => {
-                                        this.props.navigation.toggleDrawer(); 
-                                        return null}},
-                                    {text: 'Confirm', onPress: () => { 
-                                        this.props.navigation.toggleDrawer(); 
+    }
+
+    hideLoader = () => {
+        this.setState({
+            isLoading: false
+        })
+    }
+
+    render() {
+        return (
+            <DrawerContentScrollView {...this.props}>
+                <DrawerItemList   {...this.props} />
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 20 }} >
+                    <Icon style={styles.icon} name="log-out" />
+                    <DrawerItem label="Logout" onPress={() =>
+                        Alert.alert(
+                            'Log out',
+                            'Do you want to logout?',
+                            [
+                                {
+                                    text: 'Cancel', onPress: () => {
+                                        this.props.navigation.toggleDrawer();
+                                        return null
+                                    }
+                                },
+                                {
+                                    text: 'Confirm', onPress: () => {
+                                        this.props.navigation.toggleDrawer();
                                         this.showLoader();
-                                        logout().then((res)=>{
-                                            console.log("Response :" , res)
-                                            if(res.status === "success"){
+                                        logout().then((res) => {
+                                            console.log("Response :", res)
+                                            if (res.status === "success") {
                                                 this.props.navigation.navigate('Login')
                                                 showSuccessMessage("Logout Success")
                                                 clearToken();
                                             }
-                                            else{
+                                            else {
                                                 showErrorMessage("Can't Logout")
                                             }
                                         })
-                                        .finally(()=>{
-                                            this.hideLoader();
-                                        })
-                                    }},
-                                    ],
-                                    { cancelable: false }
-                                    )
-                
-                                } />
-                                {
-                                    this.state.isLoading && 
-                                    <Loader visible={this.state.isLoading} />
-                                }
-                        </View>
-                </DrawerContentScrollView>
-                
-    
+                                            .finally(() => {
+                                                this.hideLoader();
+                                            })
+                                    }
+                                },
+                            ],
+                            { cancelable: false }
+                        )
+
+                    } />
+                    {
+                        this.state.isLoading &&
+                        <Loader visible={this.state.isLoading} />
+                    }
+                </View>
+            </DrawerContentScrollView>
+
+
         )
     }
 }
@@ -107,33 +112,33 @@ class Logout extends React.Component {
 export class Menu extends React.Component {
     constructor(props) {
         super(props)
-    
+
         this.state = {
-             
+
         }
     }
-  
-    render(){
-      return(
-        <Button transparent onPress={ ()=>this.props.navigation.toggleDrawer()}  >
-          <Icon style={{fontSize:35}} active name="md-menu" /> 
-        </Button>
-      )
+
+    render() {
+        return (
+            <Button transparent onPress={() => {}}  >
+                <Icon style={{ fontSize: 35 }} active name="md-menu" />
+            </Button>
+        )
     }
 }
 export class Posts extends React.Component {
-    render(){
-      return null
+    render() {
+        return null
     }
 }
 export class Explore extends React.Component {
-    render(){
-      return null
+    render() {
+        return null
     }
 }
 export class Profile extends React.Component {
-    render(){
-      return null
+    render() {
+        return null
     }
 }
 
@@ -142,73 +147,73 @@ const Drawer = createDrawerNavigator();
 class DrawerRoute extends React.Component {
     render() {
         return (
-        <Drawer.Navigator  drawerType="slide" overlayColor="none" initialRouteName="PostScreen" drawerContent={props =><Logout {...props}  />} >
-                <Drawer.Screen 
+            <Drawer.Navigator drawerType="slide" overlayColor="none" initialRouteName="PostScreen" drawerContent={props => <Logout {...props} />} >
+                <Drawer.Screen
                     name="PostScreen"
                     component={PostScreen}
                     options={{
                         headerTitleAlign: 'center',
-                        drawerIcon:()=><Icon style={styles.icon} name="home" />,
-                        headerStyle:styles.head
+                        drawerIcon: () => <Icon style={styles.icon} name="home" />,
+                        headerStyle: styles.head
                     }}
-                    
-                    />            
-                <Drawer.Screen  
+
+                />
+                <Drawer.Screen
                     name="Explore"
                     component={Explore}
-                    options={{  
-                        drawerIcon:()=><Icon style={styles.icon} name="bookmarks" />,
+                    options={{
+                        drawerIcon: () => <Icon style={styles.icon} name="bookmarks" />,
                     }}
-                        />
-                    <Drawer.Screen  
+                />
+                <Drawer.Screen
                     name="Posts"
                     component={Posts}
-                    options={{  
-                        drawerIcon:()=><Icon style={styles.icon} name="film" />,
+                    options={{
+                        drawerIcon: () => <Icon style={styles.icon} name="film" />,
                     }}
-                        />
-                     <Drawer.Screen  
+                />
+                <Drawer.Screen
                     name="Profile"
                     component={Profile}
-                    options={{  
-                        drawerIcon:()=><Icon style={styles.icon} name="person" />,
+                    options={{
+                        drawerIcon: () => <Icon style={styles.icon} name="person" />,
                     }}
-                        />
-                         <Drawer.Screen  
+                />
+                <Drawer.Screen
                     name="Menu"
                     component={Menu}
-                    options={{ 
-                        drawerLabel:()=>null
+                    options={{
+                        drawerLabel: () => null
                     }}
-                        />
-                        <Drawer.Screen 
+                />
+                <Drawer.Screen
                     name="PickFile"
                     component={PickFile}
                     options={{
                         headerTitleAlign: 'center',
-                        drawerLabel:()=>null,
-                    }} />   
-          
+                        drawerLabel: () => null,
+                    }} />
+
             </Drawer.Navigator>
         )
     }
 }
 
 
-const styles = StyleSheet.create({ 
+const styles = StyleSheet.create({
 
-  icon:{
-      color:'blue',
-      marginRight:7
-  },
-  head:{
-      bottom:0, 
-      position:"absolute"
-  },
-  logout:{
-    bottom:0, 
-    position:"absolute"
-  }
+    icon: {
+        color: 'blue',
+        marginRight: 7
+    },
+    head: {
+        bottom: 0,
+        position: "absolute"
+    },
+    logout: {
+        bottom: 0,
+        position: "absolute"
+    }
 
 });
 

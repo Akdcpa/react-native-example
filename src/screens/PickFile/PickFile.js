@@ -42,13 +42,6 @@ export default class PickFile extends Component {
     toggleModal = () => {
       this.setState({isModalVisible: !this.state.isModalVisible});
     };
-
-    componentDidMount(){
-      // console.log("Name : " , this.props.type)
-      console.log("Name : " , this.props.route.params.type)
-
-    }
-
     selectPhotoTapped() {
         const options = {
           quality: 1.0,

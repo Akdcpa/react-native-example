@@ -1,8 +1,30 @@
-import React, { Component } from 'react'
-import { Text, View, Alert } from 'react-native'
-import {TextInput, Button } from 'react-native-paper'
-import { TouchableOpacity , } from 'react-native-gesture-handler'
-import { register} from '../../../actions/AuthAction/AuthAction'
+import React, 
+    { Component } from 'react'
+import { 
+        Text, 
+        View, 
+        Alert 
+} from 'react-native'
+
+import {
+    showWarningMessage,
+    showSuccessMessage,
+    showErrorMessage
+} from './../../../utilities/NotificationUtilities/NotificationUtilities';
+
+import {
+    TextInput, 
+    Button
+ } from 'react-native-paper'
+
+import { 
+    TouchableOpacity  
+} from 'react-native-gesture-handler'
+
+import { 
+    register
+} from '../../../actions/AuthAction/AuthAction'
+
 export default class Register extends Component {
 
     constructor(props) {
@@ -11,19 +33,47 @@ export default class Register extends Component {
         this.state = {
              email:'',
              password:'',
-             username:''
+             username:'',
+             isLoading:false
         }
     }
 
+    showLoader = () => {
+        this.setState({
+            isLoading: true
+        })
+    }
+
+    hideLoader = () => {
+        this.setState({
+            isLoading: false
+        })
+    }
+
     onRegister = () =>{
-        register(this.state.username , this.state.email , this.state.password).then((res)=>{
-            if(res.status==="success"){
-               this.props.navigation.navigate('Login')
-               Alert.alert("Registered Success")
-            }
-            // Alert.alert(res)
-            console.log(res)
-        }).catch((err)=>console.log(err))
+        if (this.state.email.trim() != "" &&
+            this.state.password.trim() != "" &&
+            this.state.username.trim() != "") {
+                this.showLoader()
+                register(this.state.username , this.state.email , this.state.password).then((res)=>{
+                    if(res.status==="success"){
+                       this.props.navigation.navigate('Login') 
+                       showSuccessMessage("Registration Success")
+                       this.setState({
+                        email:'',
+                        password:'',
+                        username:''
+                       })
+                    }  
+                }).catch((err)=>{
+                    showErrorMessage("Registration Error") 
+                })
+                .finally(()=>{
+                    this.hideLoader()
+                })
+        } else {
+            showWarningMessage("Please, fill all the details")
+        }
     }
     
     render() {
@@ -51,9 +101,9 @@ export default class Register extends Component {
                   Register
                 </Button>
                 <View style={styles.account} >
-                    <Text>Aleady have account?</Text>
+                    <Text style={{color:'white'}} >Aleady have account?</Text>
                     <TouchableOpacity onPress={()=>this.props.navigation.navigate('Login')} >
-                        <Text>Login</Text>
+                        <Text style={{color:'white'}} >Login</Text>
                     </TouchableOpacity>
                 </View>
             </View>

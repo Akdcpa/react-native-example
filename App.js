@@ -9,9 +9,7 @@ import {
   AuthRoute,
 
 } from './src/Routes/index'
-import {
-    VideoComponent
-} from './src/components/index'
+
 
 class App extends React.Component {
 

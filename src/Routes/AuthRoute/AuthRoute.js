@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import {
   StyleSheet,View
@@ -8,7 +6,9 @@ import {
 import { NavigationContainer ,
           useNavigation
 } from '@react-navigation/native'
+
 import { createStackNavigator} from '@react-navigation/stack'
+
 import {
   Register,
   Login,
@@ -17,28 +17,11 @@ import {
   MenuItem
 } from '../../screens/index'
 
-import { 
-  Button, 
-  Icon,
-} from 'native-base'; 
-const Stack = createStackNavigator();
-
 import {
-  func
-} from '../../screens/PostScreen/PostScreen'
+    Menu
+} from '../../screens/Home/Home'
 
-export class Menu extends React.Component {
-  toggleDrawer = () => {
-    this.props.navigation.toggleDrawer();
-  };
-  render(){
-    return(
-      <Button transparent onPress={this.toggleDrawer.bind(this)}  >
-        <Icon style={{fontSize:35}} active name="md-menu" /> 
-      </Button>
-    )
-  }
-}
+const Stack = createStackNavigator(); 
 
 class AuthRoute extends React.Component {
   render() {
@@ -81,14 +64,4 @@ class AuthRoute extends React.Component {
     )
   }
 }
-
-// export const MenuBar = props =>{ 
-//   return(
-//     <View>
-//       <Button transparent onPress={()=>t}  >
-//           <Icon style={{fontSize:35}} active name="md-menu" /> 
-//       </Button>
-//     </View>
-//   )
-// }
 export default AuthRoute;

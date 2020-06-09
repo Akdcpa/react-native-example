@@ -1,31 +1,21 @@
 import React, { Component } from 'react'
-import { Text, View , ScrollView , StyleSheet , Image} from 'react-native'
-import { SpanButton , Drawer , PostComponent ,FabAction} from '../../components/index'
+import {  
+        View , 
+        ScrollView , 
+        StyleSheet , 
+        Image
+  } from 'react-native'
+import {  
+        PostComponent , 
+        Loader
+  } from '../../components/index'
 
-import { getPosts , searchPosts} from '../../actions/PostAction/PostAction'
-import { getAuthToken} from '../../actions/AuthAction/AuthAction'
-
-import { Button } from 'react-native-paper'
-
-import {
-    Button as BaseButton,
-    Icon
-} from 'native-base'
-// import { TouchableOpacity } from 'react-native-gesture-handler'
+import { 
+        getPosts , 
+        searchPosts
+  } from '../../actions/PostAction/PostAction'
  
-import AsyncStorage from '@react-native-community/async-storage';
- 
-import Modal from 'react-native-modal';
-
-import PickFile from '../PickFile/PickFile'
-
 import { FloatingAction } from "react-native-floating-action";
-import {
-    TouchableOpacity
-} from 'react-native-gesture-handler'
-import ImagePicker from 'react-native-image-picker';
- 
-import { createPosts } from '../../actions/PostAction/PostAction'
 
 import {
     useNavigation
@@ -49,11 +39,8 @@ import {
       color:'#3aa600'
     },
    
-  ]; 
-
-export const func = null;
-
-
+  ];  
+  
 export default class PostScreen extends Component {
     constructor(props) {
         super(props)
@@ -62,7 +49,7 @@ export default class PostScreen extends Component {
             posts:[],
             isModalVisible:false,
             ImageSource: null,
-
+            isLoading: false
         }
         this.initialLoad=this.initialLoad.bind(this)
         func:this.props.navigation.openDrawer();
@@ -75,60 +62,35 @@ export default class PostScreen extends Component {
     };
     
     initialLoad = () => {
-        // this.showLoader()
+        this.showLoader()
         getPosts().then((res)=>{ 
-            if(res.status = "success") {
-                console.log("posts", res.data[0])
+            if(res.status = "success") { 
                 this.setState({
                     posts: res.data
                 })
             }
         })
         .finally(() => {
-            // this.hideLoader()
+            this.hideLoader()
         })
     }
+
+    showLoader = () => {
+      this.setState({
+          isLoading: true
+      })
+    }
+
+    hideLoader = () => {
+        this.setState({
+            isLoading: false
+        })
+    }
+
  
     toggleModal = () => {
         this.setState({isModalVisible: !this.state.isModalVisible});
       };
-
-      selectPhotoTapped() {
-        const options = {
-          quality: 1.0,
-          maxWidth: 500,
-          maxHeight: 500, 
-          storageOptions: {
-            skipBackup: true
-          }
-        };
-
-        ImagePicker.showImagePicker(options, (response) => {
-          console.log('Response = ', response);
-
-          if (response.didCancel) {
-            console.log('User cancelled photo picker');
-          }
-          else if (response.error) {
-            console.log('ImagePicker Error: ', response.error);
-          }
-          else if (response.customButton) {
-            console.log('User tapped custom button: ', response.customButton);
-          }
-          else {
-            let source = { uri: response.uri };
-            this.setState({
-
-              ImageSource: source,
-              type:'IMAGE'
-            });
-          }
-        });
-        console.log("Choosed Data : " , this.state.ImageSource)
-      }
-
-      toggleDrawer = () =>{
-      }
 
     render() {
 
@@ -138,8 +100,7 @@ export default class PostScreen extends Component {
                 <FloatingAction
                     actions={actions}
                     onPressItem={name => { 
-                            navigation.navigate('PickFile' , {type:name})
-                            console.log(`selected button: ${name}`); 
+                            navigation.navigate('PickFile' , {type:name}) 
                     }} 
                 /> 
             )
@@ -149,6 +110,9 @@ export default class PostScreen extends Component {
         return (
             <View>
                 <ScrollView> 
+                    {   this.state.isLoading &&
+                        <Loader visible={this.state.isLoading} />
+                    }
                     {this.state.posts.length > 0 && this.state.posts.map((items, index) => { 
                             return (
                                     <View>
@@ -169,8 +133,9 @@ export default class PostScreen extends Component {
                             } 
 
                 </ScrollView> 
-
-                <FabComponent/>
+                { !this.state.isLoading &&
+                  <FabComponent/>
+                }
             </View>
         )
     }

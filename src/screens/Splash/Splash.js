@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { 
     View, 
-    Text 
+    Text ,
+    StyleSheet
 } from 'react-native';
 import {
     getAuthToken
@@ -18,9 +19,11 @@ class Splash extends Component {
     this.initialLoad()
   };
 
-  initialLoad = () => {
+  initialLoad =async () => {
+    let token = await getAuthToken()
+    console.log("Token :" , token)
       setTimeout(async() => {
-          let token = await getAuthToken()
+          // let token = await getAuthToken()
           if(token != null) {
               this.props.navigation.navigate("Home")
           } else {
@@ -31,11 +34,24 @@ class Splash extends Component {
 
   render() {
     return (
-      <View>
-        <Text> Welcome to Post Book </Text>
+      <View style={styles.splash} >
+        <Text style={styles.text} > Welcome to Post Book </Text>
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({ 
+  splash:{
+    flex:1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text:{
+    fontSize:25,
+    fontWeight:"bold",
+    color:"grey"
+  }
+});
 
 export default Splash;

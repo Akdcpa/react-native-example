@@ -1,15 +1,10 @@
 import React , { Component} from 'react'
-import { View , Image , StyleSheet ,TextInput } from 'react-native'
-
-// import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
+import { View , Image , StyleSheet ,TextInput } from 'react-native' 
 import { IMAGE_BASE } from '../../configs/Configs'
  
-import Close from '../../asserts/images/close.png'
-import like from '../../asserts/images/like.png'
-import dislike from '../../asserts/images/dislike.png'
-import share from '../../asserts/images/share.png'
-import comment from '../../asserts/images/comment.png'
-import { TouchableOpacity , TouchableWithoutFeedback , TouchableHighlight, ScrollView} from 'react-native-gesture-handler';
+import {  
+    ScrollView
+} from 'react-native-gesture-handler';
 import Video from 'react-native-video'
 
 import {
@@ -25,8 +20,7 @@ import { Card,
          Left, 
          Body, 
          Right 
-} from 'native-base'; 
-import VideoLoader from './VideoLoader'
+} from 'native-base';  
 
 import {
       addComment,
@@ -35,12 +29,19 @@ import {
       loadComments,
 
 } from '../../actions/PostAction/PostAction'
-// import VideoPlayer from 'react-native-video-player';
+
  import {
         Button as PaperButton
  } from 'react-native-paper'
  
 import Modal from 'react-native-modal'
+import {
+    showErrorMessage,
+    showNormalMessage,
+    showSuccessMessage,
+    showWarningMessage
+} from '../../utilities/NotificationUtilities/NotificationUtilities'
+
 export default class PostComponent extends Component {
 
     constructor(props) {
@@ -119,8 +120,9 @@ export default class PostComponent extends Component {
             likecolor: 'blue',
             likecount
         })
-
-        likes(this.props.postId)
+       likes(this.props.postId).then(()=>
+       showSuccessMessage("You Liked ")
+       )
     }
 
     dislikes = () => {
@@ -129,21 +131,20 @@ export default class PostComponent extends Component {
             dislikecolor: 'blue',
             dislikecount
         })
-        dislikes(this.props.postId)
+        dislikes(this.props.postId).then(()=>
+            showNormalMessage("You disliked")
+        )
     }
 
     toggleModal = () => {
-        this.setState({isModalVisible: !this.state.isModalVisible});
-        // this.loadComments()
-        console.log("State :" , this.props.comments)
+        this.setState({isModalVisible: !this.state.isModalVisible}); 
       };
 
     componentDidMount(){
         // this.loadComments()
     }
 
-    addComment = () => {
-        console.log("Comment :" , this.state.comment)
+    addComment = () => { 
         addComment(this.props.postId, this.state.comment).then((res) => {
             this.loadComments()
         })
@@ -194,10 +195,10 @@ export default class PostComponent extends Component {
                         <Text> {this.props.message} </Text>
                     </CardItem>
                     <CardItem cardBody style={styles.cardbody} >
-                        {
+                        {/* {
                             this.props.type === 'IMAGE' &&
                                     <Image source={{uri:`${IMAGE_BASE}${this.props.logo}`}} style={styles.video} />
-                        }
+                        } */}
                         {/* {
                             this.props.type === 'VIDEO' &&
                                 // <View style={{height:300}} >
@@ -269,8 +270,7 @@ export default class PostComponent extends Component {
                                         <Avatar
                                             size="small"
                                             rounded
-                                            title={val.user.name}
-                                            onPress={() => console.log("Works!")}
+                                            title={val.user.name} 
                                             activeOpacity={0.7}
                                             />
                                         <Text>{val.comment}</Text> 
@@ -279,7 +279,7 @@ export default class PostComponent extends Component {
                                 }  
                             <View style={styles.commentpost} >
                                 <Button transparent onPress={this.toggleModal  } >
-                                        <Icon style={{fontSize:20}} active name="camera" /> 
+                                        <Icon style={{fontSize:25}} active name="camera" /> 
                                 </Button>
                                 <TextInput  value={this.state.comment}
                                             onChangeText={text => this.setState({ comment: text })}
@@ -287,7 +287,7 @@ export default class PostComponent extends Component {
                                             style={{width:'70%'}}>
                                 </TextInput>
                                 <Button transparent onPress={this.addComment  } >
-                                        <Icon  style={{fontSize:20}} active name="send" /> 
+                                        <Icon  style={{fontSize:25}} active name="send" /> 
                                 </Button>
                             </View>
                             </ScrollView> 

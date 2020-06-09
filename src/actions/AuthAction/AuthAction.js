@@ -55,14 +55,14 @@ export const login = async (email, password) => {
 }
 
 export const logout = async () => {
-    let token = getAuthToken()
+    let token = await getAuthToken()
     return fetch(`${AUTH_BASE}logout`, {
         headers:{
             'Authorization': `Bearer ${token}`,
         },
         method: 'GET',
     })
-    .then((res) => { 
+    .then((res) => {  
         return handleResponse(res) ;
     })
     .catch((e) => {
@@ -83,6 +83,13 @@ export const getAuthToken = async () => {
       if(value !== null) {
         return value;
       }
+    } catch(e) {
+
+    } 
+}
+export const clearToken = async () => {
+    try {
+      await AsyncStorage.clear()
     } catch(e) {
 
     } 

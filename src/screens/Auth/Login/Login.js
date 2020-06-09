@@ -19,9 +19,11 @@ import {
 
 import {
     showWarningMessage,
-    showSuccessMessage
+    showSuccessMessage,
+    
 } from './../../../utilities/NotificationUtilities/NotificationUtilities';
 
+import Loader from "../../../components/Loader/Loader"
 export default class Login extends Component {
 
     constructor(props) {
@@ -30,12 +32,30 @@ export default class Login extends Component {
         this.state = {
             email: '',
             password: '',
+            isLoading:false
         }
     }
 
+    showLoader = () => {
+        this.setState({
+            isLoading: true
+        })
+    }
+
+    hideLoader = () => {
+        this.setState({
+            isLoading: false
+        })
+    }
+
     onLogin = () => {
+
         if (this.state.email.trim() != "" &&
             this.state.password.trim() != "") {
+            this.setState({
+                isLoading: true
+            })
+            this.showLoader();
             login(this.state.email, this.state.password)
                 .then((res) => {
                     if (res) {
@@ -43,13 +63,18 @@ export default class Login extends Component {
                             showSuccessMessage(res.message)
                             this.props.navigation.navigate('Home')
                             setAuthToken(res.data.access_token);
-                            console.log("Auth Token Login :",getAuthToken())
-                            Alert.alert("Login Success")
+                            this.setState({
+                                email:'',
+                                password:''
+                            })
                         }
                     }
                 })
                 .catch((err) => {
 
+                })
+                .finally(()=>{
+                    this.hideLoader()
                 })
         } else {
             showWarningMessage("Please, fill all the details")
@@ -59,28 +84,39 @@ export default class Login extends Component {
     render() {
         return (
             <View style={styles.root} >
-                <TextInput label="Email"
-                    value={this.state.email}
-                    onChangeText={text => this.setState({ email: text })}
-                    style={styles.textinput}
-                />
+                {
+                    !this.state.isLoading &&
+                    <View>
+                    <TextInput label="Email"
+                        value={this.state.email}
+                        onChangeText={text => this.setState({ email: text })}
+                        style={styles.textinput}
+                    />
 
-                <TextInput label="Password"
-                    value={this.state.password}
-                    onChangeText={text => this.setState({ password: text })}
-                    style={styles.textinput}
-                />
+                    <TextInput label="Password"
+                        value={this.state.password}
+                        onChangeText={text => this.setState({ password: text })}
+                        style={styles.textinput}
+                    />
 
-                <Button style={styles.button}
-                    mode="contained"
-                    onPress={this.onLogin}>Login</Button>
+                    <Button style={styles.button}
+                        mode="contained"
+                        onPress={this.onLogin}>Login</Button>
 
-                <View style={styles.account} >
-                    <Text>Don't have account?</Text>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Register')} >
-                        <Text>Register</Text>
-                    </TouchableOpacity>
+                    <View style={styles.account} >
+                        <Text style={{color:'white'}} >Don't have account?</Text>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Register')} >
+                            <Text style={{color:'white'}} >Register</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
+
+                }
+                {
+                    this.state.isLoading &&
+                    <Loader visible={this.state.isLoading} />
+                }
+                
             </View>
         )
     }

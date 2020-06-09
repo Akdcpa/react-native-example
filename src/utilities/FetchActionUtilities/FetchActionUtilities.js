@@ -5,15 +5,14 @@ import {
 export const handleResponse = (response) => {
     try {
         return response.json()
-            .then((res) => {
+            .then((res) => { 
                 if (res.status === "success") {
                     return res;
                 } else {
                     showErrorMessage(res.message)
                 }
             })
-            .catch((e) => {
-                console.log("login response catch", e);
+            .catch((e) => { 
             })
             .finally(() => {
             })
@@ -24,8 +23,7 @@ export const handleResponse = (response) => {
  
 
 export const handleCatch = (e) => {
-    try {
-        console.log("catch error", e)
+    try { 
         showErrorMessage(e.message)
     } catch (error) {
     }

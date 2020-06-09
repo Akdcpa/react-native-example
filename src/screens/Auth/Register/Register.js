@@ -90,6 +90,7 @@ export default class Register extends Component {
                             style={styles.textinput}
                             ></TextInput>
                 <TextInput  label="Password" 
+                            secureTextEntry={true}
                             value={this.state.password} 
                             onChangeText={text=>this.setState({password:text})}
                             style={styles.textinput}

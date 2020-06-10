@@ -36,7 +36,7 @@ class AuthRoute extends React.Component {
     return (
       <NavigationContainer>
         <Stack.Navigator 
-          initialRouteName="Home" 
+          initialRouteName="Splash" 
         >
         <Stack.Screen
             name="Splash"

@@ -15,7 +15,8 @@ export const createPosts = async (data) => {
     return fetch(`${AUTH_BASE}post/create`, {
         headers: {
             'Authorization': `Bearer ${token}`,
-            // 'Content-type': "application/json"
+            'Accept': "application/json"
+            // 'Content-type': "multipart/form-data"
         },
         method: 'POST',
         body: data

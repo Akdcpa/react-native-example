@@ -1,6 +1,9 @@
 import React from 'react';
 import {
-    StyleSheet, View, Alert
+    StyleSheet, 
+    View, 
+    Alert,
+    Text
 } from 'react-native'
 
 import {
@@ -19,7 +22,12 @@ import AuthRoute from '../../Routes/AuthRoute/AuthRoute'
 
 import {
     Button,
-    Icon
+    Icon,
+    Container,
+    Header,
+    Left,
+    Right,
+    Body
 } from 'native-base'
 
 import {
@@ -33,6 +41,7 @@ import {
     showErrorMessage,
     showSuccessMessage
 } from '../../utilities/NotificationUtilities/NotificationUtilities'
+import Colors from './../../asserts/Colors';
 
 class Logout extends React.Component {
     constructor(props) {
@@ -40,8 +49,8 @@ class Logout extends React.Component {
 
         this.state = {
             isLoading: false
-
         }
+        this.logoutDialog = this.logoutDialog.bind(this)
     }
     showLoader = () => {
         this.setState({
@@ -55,55 +64,61 @@ class Logout extends React.Component {
         })
     }
 
+    logoutDialog = () => {
+        Alert.alert(
+            'Log out',
+            'Do you want to logout?',
+            [
+                {
+                    text: 'Cancel', onPress: () => {
+                        this.props.navigation.toggleDrawer();
+                        return null
+                    }
+                },
+                {
+                    text: 'Confirm', onPress: () => {
+                        this.props.navigation.toggleDrawer();
+                        this.showLoader();
+                        logout().then((res) => {
+                            if (res.status === "success") {
+                                this.props.navigation.navigate('Login')
+                                showSuccessMessage("Logout Success")
+                                clearToken();
+                            }
+                            else {
+                                showErrorMessage("Can't Logout")
+                            }
+                        })
+                            .finally(() => {
+                                this.hideLoader();
+                            })
+                    }
+                },
+            ],
+            { cancelable: false }
+        )
+    }
+
     render() {
         return (
-            <DrawerContentScrollView {...this.props}>
-                <DrawerItemList   {...this.props} />
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 20 }} >
-                    <Icon style={styles.icon} name="log-out" />
-                    <DrawerItem label="Logout" onPress={() =>
-                        Alert.alert(
-                            'Log out',
-                            'Do you want to logout?',
-                            [
-                                {
-                                    text: 'Cancel', onPress: () => {
-                                        this.props.navigation.toggleDrawer();
-                                        return null
-                                    }
-                                },
-                                {
-                                    text: 'Confirm', onPress: () => {
-                                        this.props.navigation.toggleDrawer();
-                                        this.showLoader();
-                                        logout().then((res) => {
-                                            console.log("Response :", res)
-                                            if (res.status === "success") {
-                                                this.props.navigation.navigate('Login')
-                                                showSuccessMessage("Logout Success")
-                                                clearToken();
-                                            }
-                                            else {
-                                                showErrorMessage("Can't Logout")
-                                            }
-                                        })
-                                            .finally(() => {
-                                                this.hideLoader();
-                                            })
-                                    }
-                                },
-                            ],
-                            { cancelable: false }
-                        )
-
-                    } />
-                    {
-                        this.state.isLoading &&
-                        <Loader visible={this.state.isLoading} />
-                    }
-                </View>
-            </DrawerContentScrollView>
-
+            <Container>
+                <Header style={{backgroundColor: Colors.SECODARY}}>
+                    <Left/>
+                    <Body>
+                        <Text style={{fontSize: 20}}>Post Book</Text>
+                    </Body>
+                </Header>
+                <DrawerContentScrollView {...this.props}>
+                    <DrawerItemList   {...this.props} />
+                </DrawerContentScrollView>
+                <Button
+                    onPress={this.logoutDialog}
+                    style={{justifyContent: 'center', alignContent: 'center', alignItems: 'center'}}
+                >
+                    <Icon style={{ fontSize: 35 }} active name="log-out" />
+                    <Text style={{fontSize: 20, color: "#FFFFFF"}}>Logout</Text>
+                </Button>
+            </Container>
 
         )
     }
@@ -120,7 +135,7 @@ export class Menu extends React.Component {
 
     render() {
         return (
-            <Button transparent onPress={() => {}}  >
+            <Button transparent onPress={() => { }}  >
                 <Icon style={{ fontSize: 35 }} active name="md-menu" />
             </Button>
         )
@@ -147,7 +162,13 @@ const Drawer = createDrawerNavigator();
 class DrawerRoute extends React.Component {
     render() {
         return (
-            <Drawer.Navigator drawerType="slide" overlayColor="none" initialRouteName="PostScreen" drawerContent={props => <Logout {...props} />} >
+            <Drawer.Navigator 
+                drawerType="slide" 
+                overlayColor="none" 
+                initialRouteName="PostScreen" 
+                sceneContainerStyle={{width: "70%"}}
+                drawerContent={props => <Logout {...props} />} 
+                >
                 <Drawer.Screen
                     name="PostScreen"
                     component={PostScreen}

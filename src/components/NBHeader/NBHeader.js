@@ -9,6 +9,7 @@ import {
 } from 'native-base';
 
 import RNVIE from 'react-native-vector-icons/Entypo';
+import Colors from './../../asserts/Colors';
 
 class NBHeader extends Component {
     constructor(props) {
@@ -20,7 +21,6 @@ class NBHeader extends Component {
     }
 
     openDrawer = () => {
-        console.log("header button press", this.props.navigation)
         this.props.navigation.toggleDrawer()
     }
 
@@ -29,7 +29,7 @@ class NBHeader extends Component {
             <Header
                 {...this.props}
                 style={{
-                    backgroundColor: '#3792cb'
+                    backgroundColor: Colors.SECODARY
                 }}
             >
                 <Left>

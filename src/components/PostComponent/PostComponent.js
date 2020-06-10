@@ -1,8 +1,16 @@
-import React , { Component} from 'react'
-import { View , Image , StyleSheet ,TextInput } from 'react-native' 
-import { IMAGE_BASE } from '../../configs/Configs'
- 
-import {  
+import React, { Component } from 'react'
+import { 
+    View, 
+    Image, 
+    StyleSheet, 
+    TextInput,
+    TouchableWithoutFeedback
+} from 'react-native'
+import { 
+    IMAGE_BASE 
+} from '../../configs/Configs'
+
+import {
     ScrollView
 } from 'react-native-gesture-handler';
 import Video from 'react-native-video'
@@ -11,29 +19,31 @@ import {
     Avatar
 } from 'react-native-elements'
 
-import { Card, 
-         CardItem, 
-         Thumbnail, 
-         Text, 
-         Button, 
-         Icon,
-         Left, 
-         Body, 
-         Right 
-} from 'native-base';  
+import {
+    Card,
+    CardItem,
+    Thumbnail,
+    Text,
+    Button,
+    Icon,
+    Left,
+    Body,
+    Right,
+    Container
+} from 'native-base';
 
 import {
-      addComment,
-      likes,
-      dislikes,
-      loadComments,
+    addComment,
+    likes,
+    dislikes,
+    loadComments,
 
 } from '../../actions/PostAction/PostAction'
 
- import {
-        Button as PaperButton
- } from 'react-native-paper'
- 
+import {
+    Button as PaperButton
+} from 'react-native-paper'
+
 import Modal from 'react-native-modal'
 import {
     showErrorMessage,
@@ -42,11 +52,13 @@ import {
     showWarningMessage
 } from '../../utilities/NotificationUtilities/NotificationUtilities'
 
+import Colors from './../../asserts/Colors';
+
 export default class PostComponent extends Component {
 
     constructor(props) {
         super(props)
-    
+
         this.state = {
             count: 0,
             likecolor: 'black',
@@ -58,28 +70,28 @@ export default class PostComponent extends Component {
             comments: this.props.comments,
             comment: '',
             sendShow: false,
-            video: { width: undefined, height: undefined,  undefined },
+            video: { width: undefined, height: undefined, undefined },
             thumbnailUrl: undefined,
             videoUrl: undefined,
-            modalVisible:false,
-            paused:true,
-            repeat:true,
-            volume:1,
-            rate:2,
-            pausedText:'Play',
-            muted:false,
-            duration:0.0,
-            currentTime:0.0,
-            isModalVisible:false
+            modalVisible: false,
+            paused: true,
+            repeat: true,
+            volume: 1,
+            rate: 2,
+            pausedText: 'Play',
+            muted: false,
+            duration: 0.0,
+            currentTime: 0.0,
+            isModalVisible: false
         }
 
         this.loadComments = this.loadComments.bind(this);
     }
-    
+
 
     componentDidMount = () => {
         this.initialLoad()
-      };
+    };
 
     initialLoad = () => {
         this.setState({
@@ -104,8 +116,8 @@ export default class PostComponent extends Component {
 
     };
     handleChange = (event) => {
-        this.setState({ 
-            [event.target.name]: event.target.value 
+        this.setState({
+            [event.target.name]: event.target.value
         });
     };
     handeleCommentType = () => {
@@ -120,9 +132,7 @@ export default class PostComponent extends Component {
             likecolor: 'blue',
             likecount
         })
-       likes(this.props.postId).then(()=>
-       showSuccessMessage("You Liked ")
-       )
+        likes(this.props.postId)
     }
 
     dislikes = () => {
@@ -131,20 +141,18 @@ export default class PostComponent extends Component {
             dislikecolor: 'blue',
             dislikecount
         })
-        dislikes(this.props.postId).then(()=>
-            showNormalMessage("You disliked")
-        )
+        dislikes(this.props.postId)
     }
 
     toggleModal = () => {
-        this.setState({isModalVisible: !this.state.isModalVisible}); 
-      };
+        this.setState({ isModalVisible: !this.state.isModalVisible });
+    };
 
-    componentDidMount(){
+    componentDidMount() {
         // this.loadComments()
     }
 
-    addComment = () => { 
+    addComment = () => {
         addComment(this.props.postId, this.state.comment).then((res) => {
             this.loadComments()
         })
@@ -152,42 +160,40 @@ export default class PostComponent extends Component {
 
     loadComments = () => {
         loadComments(this.props.postId).then((res) => {
-            if(res.status == "success") {
+            if (res.status == "success") {
                 this.setState({
                     comments: res.data,
-                    comment: ""
+                    comment: "",
+                    commentcount: res.data.length
                 })
             }
         })
     }
- 
-    onLoad = (data) =>{
-        this.setState({duration:data.duration})
+
+    onLoad = (data) => {
+        this.setState({ duration: data.duration })
     }
 
-    onPress = () =>{
-        this.setState({currentTime:data.currentTime})
+    onPress = () => {
+        this.setState({ currentTime: data.currentTime })
     }
-    
+
     onEnd = () => {
-        this.setState({ pausedText:"Play" , paused:true})
+        this.setState({ pausedText: "Play", paused: true })
         this.video.seek(0)
     }
 
 
     render() {
         return (
-            <View>
+            <View style={{...styles.container}}>
                 <Card>
                     <CardItem>
                         <Left>
-                            {
-                                this.props.type==='IMAGE' &&
-                                <Thumbnail source={{uri:`${IMAGE_BASE}${this.props.logo}`}} />
-                            }
+                            <Thumbnail source={require("./../../asserts/images/profile.png")} />
                             <Body>
-                            <Text>{this.props.users.name}</Text>
-                            <Text note>@{this.props.users.email}</Text>
+                                <Text>{this.props.users.name}</Text>
+                                <Text style={{ fontStyle: 'italic' }} note>@{this.props.users.email}</Text>
                             </Body>
                         </Left>
                     </CardItem>
@@ -195,15 +201,18 @@ export default class PostComponent extends Component {
                         <Text> {this.props.message} </Text>
                     </CardItem>
                     <CardItem cardBody style={styles.cardbody} >
-                        {
-                            this.props.type === 'IMAGE' &&
-                                    <Image source={{uri:`${IMAGE_BASE}${this.props.logo}`}} style={styles.video} />
+                        {this.props.type === 'IMAGE' &&
+                            <Image 
+                                source={{ uri: `${IMAGE_BASE}${this.props.logo}` }} 
+                                style={{...styles.imageStyle}} 
+                            />
                         }
                         {/* {
                             this.props.type === 'VIDEO' &&
                                 // <View style={{height:300}} >
                                     <TouchableWithoutFeedback 
                                         onPress={()=>this.setState({paused:!this.state.paused})}
+                                        style={{...styles.imageStyle}}
                                      >
                                          <Video
                                             source={{uri:`${IMAGE_BASE}${this.props.logo}`}}
@@ -225,72 +234,65 @@ export default class PostComponent extends Component {
                                     </TouchableWithoutFeedback>
                                     
                                 // </View>
-                                    
-
                         } */}
-                    
+
                     </CardItem>
                     <CardItem>
                         <Left>
-                             <Button transparent onPress={this.likes} > 
-                                <Icon active style={{color:this.state.likecolor , fontSize:25}} name="thumbs-up" />
-                                <Text> {this.state.likecount} </Text>   
-                             </Button> 
+                            <Button transparent onPress={this.likes} >
+                                <Icon active style={{ color: this.state.likecolor, fontSize: 25 }} name="thumbs-up" />
+                                <Text> {this.state.likecount} </Text>
+                            </Button>
                         </Left>
                         <Body>
-                            <Button transparent  onPress={this.dislikes}  >
-                            <Icon  active style={{color:this.state.dislikecolor,fontSize:25}} name="thumbs-down" />
-                            <Text> {this.state.dislikecount} </Text>
+                            <Button transparent onPress={this.dislikes}  >
+                                <Icon active style={{ color: this.state.dislikecolor, fontSize: 25 }} name="thumbs-down" />
+                                <Text> {this.state.dislikecount} </Text>
                             </Button>
                         </Body>
                         <Body>
-                            <Button transparent onPress={this.toggleModal  } >
-                            <Icon  style={{fontSize:25}}  active name="chatbubbles" />
-                            <Text> {this.state.commentcount} </Text>
+                            <Button transparent onPress={this.toggleModal} >
+                                <Icon style={{ fontSize: 25 }} active name="chatbubbles" />
+                                <Text> {this.state.commentcount} </Text>
                             </Button>
                         </Body>
                         <Right>
                             <Text>11h ago</Text>
                         </Right>
-                    </CardItem> 
-                </Card> 
-           
-                <View style={{flex:1}} >
-                    <Modal style={styles.modal} isVisible={this.state.isModalVisible}> 
+                    </CardItem>
+                </Card>
 
-                            <View style={styles.modalhead} > 
-                                <Text style={styles.title} >Comments</Text>
-                                <Button transparent onPress={this.toggleModal  } >
-                                    <Icon style={{fontSize:30}} active name="close" /> 
-                                </Button>
-                            </View> 
-                            <ScrollView style={styles.scroll}>  
-                                {this.state.comments.map((val, ind) => ( 
-                                    <View style={styles.commentuser} > 
-                                        <Avatar
-                                            size="small"
-                                            rounded
-                                            title={val.user.name} 
-                                            activeOpacity={0.7}
-                                            />
-                                        <Text>{val.comment}</Text> 
-                                    </View>
-                                    ))
-                                }  
+                <View style={{ flex: 1 }} >
+                    <Modal style={styles.modal} isVisible={this.state.isModalVisible}>
+
+                        <View style={styles.modalhead} >
+                            <Text style={styles.title} >Comments</Text>
+                            <Button transparent onPress={this.toggleModal} >
+                                <Icon style={{ fontSize: 30 }} active name="close" />
+                            </Button>
+                        </View>
+                        <ScrollView style={styles.scroll}>
+                            {this.state.comments.map((val, ind) => (
+                                <View style={styles.commentuser} >
+                                    <Thumbnail style={{height: 30, width: 30}} source={require("./../../asserts/images/profile.png")} />
+                                    <Text style={{marginLeft: 8}}>{val.comment}</Text>
+                                </View>
+                            ))
+                            }
                             <View style={styles.commentpost} >
-                                <Button transparent onPress={this.toggleModal  } >
-                                        <Icon style={{fontSize:25}} active name="camera" /> 
+                                <Button transparent onPress={this.toggleModal} >
+                                    <Icon style={{ fontSize: 25 }} active name="camera" />
                                 </Button>
-                                <TextInput  value={this.state.comment}
-                                            onChangeText={text => this.setState({ comment: text })}
-                                            placeholder="Comment" 
-                                            style={{width:'70%'}}>
+                                <TextInput value={this.state.comment}
+                                    onChangeText={text => this.setState({ comment: text })}
+                                    placeholder="Comment"
+                                    style={{ width: '70%' }}>
                                 </TextInput>
-                                <Button transparent onPress={this.addComment  } >
-                                        <Icon  style={{fontSize:25}} active name="send" /> 
+                                <Button disabled={this.state.comment.length <= 0} transparent onPress={this.addComment} >
+                                    <Icon color={this.state.comment.length <= 0 ? "grey" : ""} style={{ fontSize: 25 }} active name="send" />
                                 </Button>
                             </View>
-                            </ScrollView> 
+                        </ScrollView>
                     </Modal>
                 </View>
             </View>
@@ -299,64 +301,76 @@ export default class PostComponent extends Component {
 }
 
 const styles = StyleSheet.create({
-    backgroundVideo: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      bottom: 0,
-      right: 0,
-      height:300
-    },
-    icons:{
-        width:30,
-        height:30, 
-    },
-    cardaction:{
-        display:'flex',
-        justifyContent:'space-between'
-    },
     container: {
-        flex: 1,
-        justifyContent: 'center'
-      },
-      video: {
+        marginHorizontal: 10,
+        marginVertical: 5
+    },
+    backgroundVideo: {
         position: 'absolute',
         top: 0,
         left: 0,
         bottom: 0,
         right: 0,
-        height:300
-      },
-      cardbody:{
+        height: 300
+    },
+    icons: {
+        width: 30,
+        height: 30,
+    },
+    cardaction: {
+        display: 'flex',
+        justifyContent: 'space-between'
+    },
+    video: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+        height: 300
+    },
+    cardbody: {
+        // height: 300,
+        width: null,
+        flex: 1
+    },
+    modalhead: {
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    modal: {
+        backgroundColor: 'white',
+        borderRadius: 5
+    },
+    title: {
+        fontWeight: "bold",
+        fontSize: 17,
+        fontFamily: 'sans-serif',
+        marginLeft: 10
+    },
+    scroll: {
+        flex: 1,
+        marginLeft: 3,
+    },
+    commentpost: {
+        flexDirection: 'row',
+        justifyContent: "space-between",
+        marginTop: 10
+    },
+    commentuser: {
+        marginLeft: 5,
+        alignItems: 'center',
+        margin: 5,
+        flexDirection: 'row'
+    },
+    imageStyle: {
         height: 300,
-         width: null, 
-         flex: 1
-      },
-      modalhead:{
-          justifyContent:'space-between',
-          flexDirection:'row',
-          alignItems:'center'
-      },
-      modal:{
-          backgroundColor:'white'
-    },
-    title:{
-        fontWeight:"bold",
-        fontSize:17,
-        fontFamily:'sans-serif',
-        marginLeft:10
-    },
-    scroll:{
-        flex: 1, 
-        marginLeft:3,
-    },
-    commentpost:{
-        flexDirection:'row',
-        justifyContent:"space-between",
-        marginTop:10
-    },
-    commentuser:{
-        marginLeft:5
+        width: "94%",
+        borderRadius: 5,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 4
     }
-
-  });
+});

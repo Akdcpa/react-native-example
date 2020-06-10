@@ -3,7 +3,6 @@ import {
 } from './../NotificationUtilities/NotificationUtilities';
 
 export const handleResponse = (response) => {
-    console.log("response for login", JSON.stringify(response))
     try {
         return response.json()
             .then((res) => {
@@ -14,6 +13,7 @@ export const handleResponse = (response) => {
                 }
             })
             .catch((e) => {
+                console.log("handle response cache", e)
             })
             .finally(() => {
             })
@@ -25,6 +25,7 @@ export const handleResponse = (response) => {
 
 export const handleCatch = (e) => {
     try {
+        console.log("handle catch cache", e)
         showErrorMessage(e.message)
     } catch (error) {
     }

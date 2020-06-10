@@ -21,7 +21,6 @@ class Splash extends Component {
 
   initialLoad =async () => {
     let token = await getAuthToken()
-    console.log("Token :" , token)
       setTimeout(async() => {
           // let token = await getAuthToken()
           if(token != null) {

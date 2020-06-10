@@ -1,18 +1,19 @@
 import {
     showErrorMessage
-} from './../NotificationUtilities/NotificationUtilities'; 
+} from './../NotificationUtilities/NotificationUtilities';
 
 export const handleResponse = (response) => {
+    console.log("response for login", JSON.stringify(response))
     try {
         return response.json()
-            .then((res) => { 
+            .then((res) => {
                 if (res.status === "success") {
                     return res;
                 } else {
                     showErrorMessage(res.message)
                 }
             })
-            .catch((e) => { 
+            .catch((e) => {
             })
             .finally(() => {
             })
@@ -20,10 +21,10 @@ export const handleResponse = (response) => {
         showErrorMessage(e.message)
     }
 }
- 
+
 
 export const handleCatch = (e) => {
-    try { 
+    try {
         showErrorMessage(e.message)
     } catch (error) {
     }

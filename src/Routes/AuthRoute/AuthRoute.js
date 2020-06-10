@@ -64,11 +64,12 @@ class AuthRoute extends React.Component {
           <Stack.Screen
             name="Home"
             component={Home}
-            options={({navigation}) => ({ 
-              headerTitleAlign: 'center',
-              headerLeft: () => (
-                <Menu onPress={() => navigation.toggleDrawer()}/>
-              ),
+            options={({navigation}) => ({
+              headerShown: false 
+              // headerTitleAlign: 'center',
+              // headerLeft: () => (
+              //   <Menu onPress={() => navigation.toggleDrawer()}/>
+              // ),
             })}
           />
         </Stack.Navigator>

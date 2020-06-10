@@ -8,8 +8,9 @@ import {
   } from 'react-native'
 import {  
         PostComponent , 
-        Loader
-  } from '../../components/index'
+        Loader,
+        NBHeader
+  } from '../../components'
 
 import { 
         getPosts , 
@@ -21,6 +22,10 @@ import { FloatingAction } from "react-native-floating-action";
 import {
     useNavigation
 } from '@react-navigation/native'
+import {
+    Container, 
+    Content 
+} from 'native-base';
  
  
  const actions = [
@@ -60,12 +65,12 @@ export default class PostScreen extends Component {
     }
 
     componentDidMount = async () => { 
-        // setTimeout(() => {1
-            // this.initialLoad()
-            this.props.navigation.addListener('focus', () => {
-                this.initialLoad()
-              })
-        // }, 1000);  
+        setTimeout(() => {
+            this.initialLoad()
+        }, 1000);  
+        this.props.navigation.addListener('focus', () => {
+            this.initialLoad()
+          })
     };
     
     initialLoad = () => {
@@ -122,8 +127,12 @@ export default class PostScreen extends Component {
         }
 
         return (
-            <View>
-                <ScrollView
+            <Container>
+                <NBHeader
+                    navigation={this.props.navigation}
+                    title={`Post Book`}
+                />
+                <Content
                     refreshControl={
                         <RefreshControl refreshing={this.state.isRefreshing} onRefresh={this.onRefresh} />
                       }
@@ -150,11 +159,11 @@ export default class PostScreen extends Component {
                                 })
                             } 
 
-                </ScrollView> 
+                </Content> 
                 { !this.state.isLoading &&
                   <FabComponent/>
                 }
-            </View>
+            </Container>
         )
     }
 }

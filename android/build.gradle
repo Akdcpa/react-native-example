@@ -2,10 +2,21 @@
 
 buildscript {
     ext {
-        buildToolsVersion = "28.0.3"
+        buildToolsVersion = "26.0.3"
         minSdkVersion = 16
-        compileSdkVersion = 28
-        targetSdkVersion = 28
+        compileSdkVersion = 26
+        targetSdkVersion = 26
+    }
+    subprojects {
+        afterEvaluate {
+            android {
+                compileSdkVersion 28
+                buildToolsVersion "28.0.3"
+                defaultConfig {
+                    targetSdkVersion 28
+                }
+            }
+        }
     }
     repositories {
         google()

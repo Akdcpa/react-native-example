@@ -50,7 +50,8 @@ export default class PickFile extends Component {
       pictures: null,
       comment: '',
       type: '',
-      isLoading: false
+      isLoading: false,
+      VideoSource:null
     }
     this.onBackPress = this.onBackPress.bind(this)
   }
@@ -161,11 +162,12 @@ export default class PickFile extends Component {
  
     try {
       const res = await DocumentPicker.pick({
-        type: [DocumentPicker.types.allFiles],
+        type: [DocumentPicker.types.video],
       
       });
  
-      this.setState({ singleFileOBJ: res });
+      this.setState({ ImageSource: res });
+      console.log("Res :" , this.state.ImageSource)
  
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -260,7 +262,7 @@ export default class PickFile extends Component {
           <View style={styles.picker} >
 
             {
-              this.props.route.params.type === "post_comment" &&
+              this.props.route.params.type === "post_photo" &&
               <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
                 <View style={styles.ImageContainer}>
                   {this.state.ImageSource === null ? <Text style={{ padding: 15, fontSize: 20 }}>Select a Photo</Text> :
@@ -271,7 +273,7 @@ export default class PickFile extends Component {
 
             }
             {
-              this.props.route.params.type === "post_file" &&
+              this.props.route.params.type === "post_video" &&
 
               <TouchableOpacity onPress={this.selectVideoTapped.bind(this)}>
 

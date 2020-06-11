@@ -36,11 +36,19 @@ import Colors from './../../asserts/Colors';
 
 const actions = [
     {
-        text: "PostFile",
+        text: "PostPhoto",
         icon: require("../../asserts/images/edit-image.png"),
-        name: "post_file",
+        name: "post_photo",
+        position: 3,
+        buttonSize: 50,
+        color: '#b64d00'
+    },
+    {
+        text: "PostVideo",
+        icon: require("../../asserts/images/video.png"),
+        name: "post_video",
         position: 2,
-        buttonSize: 45,
+        buttonSize: 46,
         color: '#5400b9'
     },
     {
@@ -48,8 +56,10 @@ const actions = [
         icon: require("../../asserts/images/pencil.png"),
         name: "post_comment",
         position: 1,
+        buttonSize: 42,
         color: '#3aa600'
     },
+
 
 ];
 
@@ -94,19 +104,7 @@ export default class PostScreen extends Component {
                 this.hideRefresh()
             })
     }
-
-    // showLoader = () => {
-    //     this.setState({
-    //         isLoading: true
-    //     })
-    // }
-
-    // hideLoader = () => {
-    //     this.setState({
-    //         isLoading: false
-    //     })
-    // }
-
+ 
     showRefresh = () =>{
         this.setState({
             isRefreshing:true
@@ -152,6 +150,7 @@ export default class PostScreen extends Component {
             const navigation = useNavigation();
             return (
                 <FloatingAction
+                    buttonSize={55}
                     actions={actions}
                     onPressItem={name => {
                         navigation.navigate('PickFile', { type: name })
@@ -180,10 +179,7 @@ export default class PostScreen extends Component {
                     refreshControl={
                         <RefreshControl refreshing={this.state.isRefreshing} onRefresh={this.onRefresh} />
                     }
-                >
-                    {/* {this.state.isLoading &&
-                        <Loader visible={this.state.isLoading} />
-                    } */}
+                > 
                     {this.state.posts.length > 0 && this.state.posts.map((items, index) => {
                         return (
                                 <PostComponent

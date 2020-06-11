@@ -54,6 +54,8 @@ import {
 
 import Colors from './../../asserts/Colors';
 
+import Loader from '../Loader/Loader'
+
 export default class PostComponent extends Component {
 
     constructor(props) {
@@ -82,7 +84,8 @@ export default class PostComponent extends Component {
             muted: false,
             duration: 0.0,
             currentTime: 0.0,
-            isModalVisible: false
+            isModalVisible: false,
+            isLoading:false
         }
 
         this.loadComments = this.loadComments.bind(this);
@@ -153,8 +156,10 @@ export default class PostComponent extends Component {
     }
 
     addComment = () => {
+        this.showLoader();
         addComment(this.props.postId, this.state.comment).then((res) => {
             this.loadComments()
+            this.hideLoader();
         })
     }
 
@@ -183,6 +188,17 @@ export default class PostComponent extends Component {
         this.video.seek(0)
     }
 
+    showLoader = () => {
+        this.setState({
+            isLoading: true
+        })
+    }
+
+    hideLoader = () => {
+        this.setState({
+            isLoading: false
+        })
+    }
 
     render() {
         return (
@@ -264,7 +280,6 @@ export default class PostComponent extends Component {
 
                 <View style={{ flex: 1 }} >
                     <Modal style={styles.modal} isVisible={this.state.isModalVisible}>
-
                         <View style={styles.modalhead} >
                             <Text style={styles.title} >Comments</Text>
                             <Button transparent onPress={this.toggleModal} >
@@ -292,6 +307,9 @@ export default class PostComponent extends Component {
                                     <Icon color={this.state.comment.length <= 0 ? "grey" : ""} style={{ fontSize: 25 }} active name="send" />
                                 </Button>
                             </View>
+                            {   this.state.isLoading && 
+                                <Loader visible={this.state.isLoading} />
+                            }
                         </ScrollView>
                     </Modal>
                 </View>

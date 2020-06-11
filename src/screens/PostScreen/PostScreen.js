@@ -80,7 +80,8 @@ export default class PostScreen extends Component {
     };
 
     initialLoad = () => {
-        this.showLoader()
+        // this.showLoader()
+        this.showRefresh()
         getPosts().then((res) => {
             if (res.status = "success") {
                 this.setState({
@@ -89,31 +90,41 @@ export default class PostScreen extends Component {
             }
         })
             .finally(() => {
-                this.hideLoader()
+                // this.hideLoader()
+                this.hideRefresh()
             })
     }
 
-    showLoader = () => {
+    // showLoader = () => {
+    //     this.setState({
+    //         isLoading: true
+    //     })
+    // }
+
+    // hideLoader = () => {
+    //     this.setState({
+    //         isLoading: false
+    //     })
+    // }
+
+    showRefresh = () =>{
         this.setState({
-            isLoading: true
+            isRefreshing:true
         })
     }
 
-    hideLoader = () => {
+    hideRefresh = () =>{
         this.setState({
-            isLoading: false
+            isRefreshing:false
         })
     }
-
 
     toggleModal = () => {
         this.setState({ isModalVisible: !this.state.isModalVisible });
     };
 
-    onRefresh = () => {
-        this.setState({
-            isRefreshing: false
-        })
+    onRefresh = () => { 
+        this.showRefresh();
         this.initialLoad()
     }
 
@@ -170,9 +181,9 @@ export default class PostScreen extends Component {
                         <RefreshControl refreshing={this.state.isRefreshing} onRefresh={this.onRefresh} />
                     }
                 >
-                    {this.state.isLoading &&
+                    {/* {this.state.isLoading &&
                         <Loader visible={this.state.isLoading} />
-                    }
+                    } */}
                     {this.state.posts.length > 0 && this.state.posts.map((items, index) => {
                         return (
                             <View>

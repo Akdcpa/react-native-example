@@ -28,6 +28,8 @@ import {
   Container
 } from 'native-base'
 import { showSuccessMessage } from '../../utilities/NotificationUtilities/NotificationUtilities';
+import DocumentPicker from 'react-native-document-picker'; 
+
 
 export default class PickFile extends Component {
   constructor(props) {
@@ -120,40 +122,59 @@ export default class PickFile extends Component {
     console.log("Choosed Data : ", this.state.ImageSource)
   }
 
-  selectVideoTapped() {
-    const options = {
-      quality: 1.0,
-      title: 'Select Video',
-      maxWidth: 500,
-      maxHeight: 500,
-      mediaType: 'video',
+  async selectVideoTapped() {
+    // const options = {
+    //   quality: 1.0,
+    //   title: 'Select Video',
+    //   maxWidth: 500,
+    //   maxHeight: 500,
+    //   mediaType: 'video',
+    //   path:'video',
 
-      storageOptions: {
-        skipBackup: true
-      }
-    };
+    //   storageOptions: {
+    //     skipBackup: true
+    //   }
+    // };
 
-    ImagePicker.showImagePicker(options, (response) => {
-      console.log('Response = ', response);
+    // ImagePicker.showImagePicker(options, (response) => {
+    //   console.log('Response = ', response);
 
-      if (response.didCancel) {
-        console.log('User cancelled photo picker');
+    //   if (response.didCancel) {
+    //     console.log('User cancelled photo picker');
+    //   }
+    //   else if (response.error) {
+    //     console.log('ImagePicker Error: ', response.error);
+    //   }
+    //   else if (response.customButton) {
+    //     console.log('User tapped custom button: ', response.customButton);
+    //   }
+    //   else {
+    //     let source = { uri: response.uri };
+    //     this.setState({
+    //       ImageSource: response,
+    //       type: 'VIDEO'
+    //     });
+    //   }
+    // });
+    // console.log("Choosed Data : ", this.state.ImageSource)
+
+ 
+    try {
+      const res = await DocumentPicker.pick({
+        type: [DocumentPicker.types.allFiles],
+      
+      });
+ 
+      this.setState({ singleFileOBJ: res });
+ 
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        console.log('Canceled');
+      } else {
+        console.log('Unknown Error: ' , JSON.stringify(err));
+        throw err;
       }
-      else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      }
-      else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      }
-      else {
-        let source = { uri: response.uri };
-        this.setState({
-          ImageSource: response,
-          type: 'VIDEO'
-        });
-      }
-    });
-    console.log("Choosed Data : ", this.state.ImageSource)
+    }
   }
 
   handleSubmit = () => {

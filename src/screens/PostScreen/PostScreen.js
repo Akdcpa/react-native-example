@@ -37,7 +37,7 @@ import Colors from './../../asserts/Colors';
 const actions = [
     {
         text: "PostPhoto",
-        icon: require("../../asserts/images/edit-image.png"),
+        icon: require("../../asserts/images/image-posts.png"),
         name: "post_photo",
         position: 3,
         buttonSize: 50,
@@ -150,7 +150,8 @@ export default class PostScreen extends Component {
             const navigation = useNavigation();
             return (
                 <FloatingAction
-                    buttonSize={55}
+                    buttonSize={59}
+                    actionsPaddingTopBottom={5}
                     actions={actions}
                     onPressItem={name => {
                         navigation.navigate('PickFile', { type: name })

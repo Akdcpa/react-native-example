@@ -124,42 +124,7 @@ export default class PickFile extends Component {
   }
 
   async selectVideoTapped() {
-    // const options = {
-    //   quality: 1.0,
-    //   title: 'Select Video',
-    //   maxWidth: 500,
-    //   maxHeight: 500,
-    //   mediaType: 'video',
-    //   path:'video',
 
-    //   storageOptions: {
-    //     skipBackup: true
-    //   }
-    // };
-
-    // ImagePicker.showImagePicker(options, (response) => {
-    //   console.log('Response = ', response);
-
-    //   if (response.didCancel) {
-    //     console.log('User cancelled photo picker');
-    //   }
-    //   else if (response.error) {
-    //     console.log('ImagePicker Error: ', response.error);
-    //   }
-    //   else if (response.customButton) {
-    //     console.log('User tapped custom button: ', response.customButton);
-    //   }
-    //   else {
-    //     let source = { uri: response.uri };
-    //     this.setState({
-    //       ImageSource: response,
-    //       type: 'VIDEO'
-    //     });
-    //   }
-    // });
-    // console.log("Choosed Data : ", this.state.ImageSource)
-
- 
     try {
       const res = await DocumentPicker.pick({
         type: [DocumentPicker.types.video],

@@ -77,12 +77,12 @@ export default class PostComponent extends Component {
             thumbnailUrl: undefined,
             videoUrl: undefined,
             modalVisible: false,
-            paused: true,
+            paused: false,
             repeat: true,
             volume: 1,
             rate: 2,
             pausedText: 'Play',
-            muted: false,
+            muted: true,
             duration: 0.0,
             currentTime: 0.0,
             isModalVisible: false,
@@ -240,21 +240,20 @@ export default class PostComponent extends Component {
                                 style={{...styles.imageStyle}} 
                             />
                         }
-                        {/* {
+                        {
                             this.props.type === 'VIDEO' &&
-                                // <View style={{height:300}} >
+                                <View style={{height:300}} >
                                     <TouchableWithoutFeedback 
                                         onPress={()=>this.setState({paused:!this.state.paused})}
-                                        style={{...styles.imageStyle}}
+                                        style={styles.imageStyle}
                                      >
                                          <Video
                                             source={{uri:`${IMAGE_BASE}${this.props.logo}`}}
                                             ref={(ref:Video) => {this.video=ref}}
                                             rate={1.0}
-                                            volume={1.0}
-                                            muted={false}
+                                            volume={1.0} 
                                             resizeMode={"cover"}
-                                            repeat={false}
+                                            repeat={this.state.repeat}
                                             style={styles.video}
                                             paused={this.state.paused}
                                             muted={this.state.muted}
@@ -266,8 +265,8 @@ export default class PostComponent extends Component {
 
                                     </TouchableWithoutFeedback>
                                     
-                                // </View>
-                        } */}
+                                 </View>
+                        }
 
                     </CardItem>
                     <CardItem>

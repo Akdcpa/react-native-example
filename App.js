@@ -10,6 +10,9 @@ import {
 
 } from './src/Routes/index'
 
+import {
+  VideoExample
+} from './src/screens/index'
 
 class App extends React.Component {
 
@@ -20,6 +23,7 @@ class App extends React.Component {
   render() {
     return (
       <AuthRoute /> 
+      // <VideoExample/>
     )
   }
 }
@@ -31,3 +35,4 @@ export default () => {
     </Root>
   )
 };
+ 

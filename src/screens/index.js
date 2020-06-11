@@ -6,6 +6,7 @@ import Home , { MenuItem } from './Home/Home';
 import Splash from './Splash/Splash'
 import PostScreen from './PostScreen/PostScreen'
 import Loader from './'
+import VideoExample from './VideoExample'
 
 export {
     Splash,
@@ -13,5 +14,6 @@ export {
     Login,
     Home,
     PostScreen,
-    MenuItem
+    MenuItem,
+    VideoExample
 }

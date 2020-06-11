@@ -175,8 +175,8 @@ export default class PostScreen extends Component {
                     }
                     {this.state.posts.length > 0 && this.state.posts.map((items, index) => {
                         return (
-                            <View>
                                 <PostComponent
+                                    key={index}
                                     postId={items.id}
                                     likes={items.likes}
                                     dislikes={items.dislikes}
@@ -188,7 +188,7 @@ export default class PostScreen extends Component {
                                     onClick={this.selecteBranch}
                                     comments={items.comments}
                                 />
-                            </View>)
+                    )
                     })
                     }
 

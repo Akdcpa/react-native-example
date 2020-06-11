@@ -29,7 +29,8 @@ import {
     Left,
     Body,
     Right,
-    Container
+    Container,
+    Spinner
 } from 'native-base';
 
 import {
@@ -85,7 +86,7 @@ export default class PostComponent extends Component {
             duration: 0.0,
             currentTime: 0.0,
             isModalVisible: false,
-            isLoading:false
+            commmentLoader: false
         }
 
         this.loadComments = this.loadComments.bind(this);
@@ -155,11 +156,27 @@ export default class PostComponent extends Component {
         // this.loadComments()
     }
 
+    setCommentLoader = () => {
+        this.setState({
+            commmentLoader: true
+        })
+    }
+
+    unSetCommentLoader = () => {
+        this.setState({
+            commmentLoader: false
+        })
+    }
+
+
     addComment = () => {
-        this.showLoader();
+        this.setCommentLoader()
         addComment(this.props.postId, this.state.comment).then((res) => {
             this.loadComments()
             this.hideLoader();
+        })
+        .finally(() => {
+            this.unSetCommentLoader()
         })
     }
 
@@ -303,9 +320,14 @@ export default class PostComponent extends Component {
                                     placeholder="Comment"
                                     style={{ width: '70%' }}>
                                 </TextInput>
-                                <Button disabled={this.state.comment.length <= 0} transparent onPress={this.addComment} >
-                                    <Icon color={this.state.comment.length <= 0 ? "grey" : ""} style={{ fontSize: 25 }} active name="send" />
-                                </Button>
+                                {this.state.commmentLoader&&
+                                    <Spinner/>
+                                }
+                                {!this.state.commmentLoader&&
+                                    <Button disabled={this.state.comment.length <= 0} transparent onPress={this.addComment} >
+                                        <Icon color={this.state.comment.length <= 0 ? "grey" : ""} style={{ fontSize: 25 }} active name="send" />
+                                    </Button>
+                                }
                             </View>
                             {   this.state.isLoading && 
                                 <Loader visible={this.state.isLoading} />

@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
   },
   imageStyle: {
     height: 300,
-    width: "95%",
+    width: 300,
     borderRadius: 5,
     alignSelf: 'center',
     justifyContent: 'center',

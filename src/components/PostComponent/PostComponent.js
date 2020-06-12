@@ -1,19 +1,20 @@
 import React, { Component } from 'react'
-import { 
-    View, 
-    Image, 
-    StyleSheet, 
+import {
+    View,
+    Image,
+    StyleSheet,
     TextInput,
     TouchableWithoutFeedback
 } from 'react-native'
-import { 
-    IMAGE_BASE 
+import {
+    IMAGE_BASE
 } from '../../configs/Configs'
 
 import {
     ScrollView
 } from 'react-native-gesture-handler';
 import Video from 'react-native-video'
+import VideoPlayer from 'react-native-video-player';
 
 import {
     Avatar
@@ -175,9 +176,9 @@ export default class PostComponent extends Component {
             this.loadComments()
             this.hideLoader();
         })
-        .finally(() => {
-            this.unSetCommentLoader()
-        })
+            .finally(() => {
+                this.unSetCommentLoader()
+            })
     }
 
     loadComments = () => {
@@ -219,7 +220,7 @@ export default class PostComponent extends Component {
 
     render() {
         return (
-            <View style={{...styles.container}}>
+            <View style={{ ...styles.container }}>
                 <Card>
                     <CardItem>
                         <Left>
@@ -233,39 +234,28 @@ export default class PostComponent extends Component {
                     <CardItem>
                         <Text> {this.props.message} </Text>
                     </CardItem>
-                    <CardItem cardBody style={styles.cardbody} >
+                    <CardItem cardBody>
                         {this.props.type === 'IMAGE' &&
-                            <Image 
-                                source={{ uri: `${IMAGE_BASE}${this.props.logo}` }} 
-                                style={{...styles.imageStyle}} 
+                            <Image
+                                source={{ uri: `${IMAGE_BASE}${this.props.logo}` }}
+                                style={{ ...styles.imageStyle }}
                             />
                         }
                         {
                             this.props.type === 'VIDEO' &&
-                                <View style={{height:300}} >
-                                    <TouchableWithoutFeedback 
-                                        onPress={()=>this.setState({paused:!this.state.paused})}
-                                        style={styles.imageStyle}
-                                     >
-                                         <Video
-                                            source={{uri:`${IMAGE_BASE}${this.props.logo}`}}
-                                            ref={(ref:Video) => {this.video=ref}}
-                                            rate={1.0}
-                                            volume={1.0} 
-                                            resizeMode={"cover"}
-                                            repeat={this.state.repeat}
-                                            style={styles.video}
-                                            paused={this.state.paused}
-                                            muted={this.state.muted}
-                                            onLoad={this.onLoad}
-                                            onProgress={this.onProgress}
-                                            onEnd={this.onEnd}
-                                            
-                                        />
-
-                                    </TouchableWithoutFeedback>
-                                    
-                                 </View>
+                            <View style={{
+                                    width: "95%",
+                                    marginLeft: 6
+                                }} 
+                            >
+                                <VideoPlayer
+                                    video={{ uri: `${IMAGE_BASE}${this.props.logo}` }}
+                                    // videoWidth={2500}
+                                    style={{borderRadius: 5}}
+                                    // videoHeight={1600}
+                                    thumbnail={require('./../../asserts/images/logo.png')}
+                                />
+                            </View>
                         }
 
                     </CardItem>
@@ -305,8 +295,8 @@ export default class PostComponent extends Component {
                         <ScrollView style={styles.scroll}>
                             {this.state.comments.map((val, ind) => (
                                 <View style={styles.commentuser} >
-                                    <Thumbnail style={{height: 30, width: 30}} source={require("./../../asserts/images/profile.png")} />
-                                    <Text style={{marginLeft: 8}}>{val.comment}</Text>
+                                    <Thumbnail style={{ height: 30, width: 30 }} source={require("./../../asserts/images/profile.png")} />
+                                    <Text style={{ marginLeft: 8 }}>{val.comment}</Text>
                                 </View>
                             ))
                             }
@@ -319,16 +309,16 @@ export default class PostComponent extends Component {
                                     placeholder="Comment"
                                     style={{ width: '70%' }}>
                                 </TextInput>
-                                {this.state.commmentLoader&&
-                                    <Spinner/>
+                                {this.state.commmentLoader &&
+                                    <Spinner />
                                 }
-                                {!this.state.commmentLoader&&
+                                {!this.state.commmentLoader &&
                                     <Button disabled={this.state.comment.length <= 0} transparent onPress={this.addComment} >
                                         <Icon color={this.state.comment.length <= 0 ? "grey" : ""} style={{ fontSize: 25 }} active name="send" />
                                     </Button>
                                 }
                             </View>
-                            {   this.state.isLoading && 
+                            {this.state.isLoading &&
                                 <Loader visible={this.state.isLoading} />
                             }
                         </ScrollView>
@@ -405,11 +395,11 @@ const styles = StyleSheet.create({
     },
     imageStyle: {
         height: 300,
-        width: "94%",
+        width: "95%",
         borderRadius: 5,
         alignSelf: 'center',
         justifyContent: 'center',
         alignItems: 'center',
-        marginLeft: 4
+        marginLeft: 6
     }
 });

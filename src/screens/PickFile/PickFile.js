@@ -28,7 +28,8 @@ import {
   Container
 } from 'native-base'
 import { showSuccessMessage } from '../../utilities/NotificationUtilities/NotificationUtilities';
-import DocumentPicker from 'react-native-document-picker'; 
+import DocumentPicker from 'react-native-document-picker';
+import VideoPlayer from 'react-native-video-player';
 
 
 export default class PickFile extends Component {
@@ -51,7 +52,7 @@ export default class PickFile extends Component {
       comment: '',
       type: '',
       isLoading: false,
-      VideoSource:null
+      VideoSource: null
     }
     this.onBackPress = this.onBackPress.bind(this)
   }
@@ -128,17 +129,20 @@ export default class PickFile extends Component {
     try {
       const res = await DocumentPicker.pick({
         type: [DocumentPicker.types.video],
-      
+
       });
- 
-      this.setState({ ImageSource: res });
-      console.log("Res :" , this.state.ImageSource)
- 
+
+      this.setState({
+        ImageSource: res,
+        type: "VIDEO"
+      });
+      console.log("Res :", res)
+
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         console.log('Canceled');
       } else {
-        console.log('Unknown Error: ' , JSON.stringify(err));
+        console.log('Unknown Error: ', JSON.stringify(err));
         throw err;
       }
     }
@@ -149,9 +153,11 @@ export default class PickFile extends Component {
       // pic:this.state.ImageSource.uri,
       comment: this.state.Comment
     }
-
-    console.log("Picked Data : ", data)
-    this.createPost()
+    if (this.state.type == "VIDEO") {
+      this.createVideoPost()
+    } else {
+      this.createPost()
+    }
   }
 
   createPost = () => {
@@ -170,7 +176,25 @@ export default class PickFile extends Component {
         name: response.fileName,
         type: response.type,
         size: response.fileSize
-    });
+      });
+      formData.append("type", this.state.type)
+      this.sendPost(formData)
+
+    } else {
+      this.sendPost(formData)
+    }
+  }
+
+  createVideoPost = () => {
+
+    let formData = new FormData();
+
+    formData.append("message", this.state.comment)
+    // this.sendPost(formData)
+
+    if (this.state.type == "IMAGE" || this.state.type == "VIDEO") {
+      let response = this.state.ImageSource;
+      formData.append("image", response);
       formData.append("type", this.state.type)
       this.sendPost(formData)
 
@@ -231,7 +255,7 @@ export default class PickFile extends Component {
               <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
                 <View style={styles.ImageContainer}>
                   {this.state.ImageSource === null ? <Text style={{ padding: 15, fontSize: 20 }}>Select a Photo</Text> :
-                    <Image style={styles.ImageContainer} source={this.state.ImageSource} />
+                    <Image style={styles.ImageContainer} source={this.state.ImageSource} style={{ ...styles.imageStyle }} />
                   }
                 </View>
               </TouchableOpacity>
@@ -240,15 +264,28 @@ export default class PickFile extends Component {
             {
               this.props.route.params.type === "post_video" &&
 
-              <TouchableOpacity onPress={this.selectVideoTapped.bind(this)}>
+              <TouchableOpacity>
 
-                <View style={{ ...styles.ImageContainer }}>
+                <View style={{width: "100%"}}>
                   {this.state.ImageSource === null ?
-                    <Text style={{ padding: 15, fontSize: 20 }}>Select a Video</Text>
+                    <TouchableOpacity onPress={this.selectVideoTapped.bind(this)}>
+                      <Text style={{ padding: 15, fontSize: 20 }}>Select a Video</Text>
+                    </TouchableOpacity>
                     :
-                    <Image style={styles.pickImageContainer} source={this.state.ImageSource} />
+                      <VideoPlayer
+                        video={{ uri: this.state.ImageSource.uri }}
+                        videoWidth={2500}
+                        style={{ borderRadius: 5 }}
+                        videoHeight={1600}
+                        thumbnail={require('./../../asserts/images/logo.png')}
+                      />
                   }
                 </View>
+                {this.state.ImageSource != null &&
+                  <TouchableOpacity onPress={this.selectVideoTapped.bind(this)}>
+                    <Text style={{ fontSize: 20, marginTop: 10, textAlign: 'center' }}>Take another video</Text>
+                  </TouchableOpacity>
+                }
               </TouchableOpacity>
 
             }
@@ -306,5 +343,14 @@ const styles = StyleSheet.create({
   },
   pickImageContainer: {
     width: "95%"
+  },
+  imageStyle: {
+    height: 300,
+    width: "95%",
+    borderRadius: 5,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 6
   }
 })
